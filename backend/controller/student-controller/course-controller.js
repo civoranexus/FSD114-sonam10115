@@ -1,5 +1,5 @@
 const Course = require("../../models/Course");
-const StudentCourses = require("../../models/StudentCourses");
+const StudentCourses = require("../../models/StudentCourse");
 
 const getAllStudentViewCourses = async (req, res) => {
     try {

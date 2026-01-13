@@ -1,6 +1,6 @@
 const CourseProgress = require("../../models/CourseProgress");
 const Course = require("../../models/Course");
-const StudentCourses = require("../../models/StudentCourses");
+const StudentCourses = require("../../models/StudentCourse");
 
 //mark current lecture as viewed
 const markCurrentLectureAsViewed = async (req, res) => {

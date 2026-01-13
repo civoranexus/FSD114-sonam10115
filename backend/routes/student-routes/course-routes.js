@@ -3,7 +3,7 @@ const {
     getStudentViewCourseDetails,
     getAllStudentViewCourses,
     checkCoursePurchaseInfo,
-} = require("../../controllers/student-controller/course-controller");
+} = require("../../controller/student-controller/course-controller");
 const router = express.Router();
 
 router.get("/get", getAllStudentViewCourses);

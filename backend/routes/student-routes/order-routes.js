@@ -2,7 +2,7 @@ const express = require("express");
 const {
     createOrder,
     capturePaymentAndFinalizeOrder,
-} = require("../../controllers/student-controller/order-controller");
+} = require("../../controller/student-controller/order-controller");
 
 const router = express.Router();
 
