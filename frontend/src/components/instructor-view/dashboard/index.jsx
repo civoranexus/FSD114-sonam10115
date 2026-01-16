@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -8,84 +7,105 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  courseCurriculumInitialFormData,
-  courseLandingInitialFormData,
-} from "@/config";
-import { InstructorContext } from "@/context/instructor-context";
-import { Delete, Edit } from "lucide-react";
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { DollarSign, Users } from "lucide-react";
 
-function InstructorCourses({ listOfCourses }) {
-  const navigate = useNavigate();
-  const {
-    setCurrentEditedCourseId,
-    setCourseLandingFormData,
-    setCourseCurriculumFormData,
-  } = useContext(InstructorContext);
+function InstructorDashboard({ listOfCourses }) {
+  function calculateTotalStudentsAndProfit() {
+    const { totalStudents, totalProfit, studentList } = listOfCourses.reduce(
+      (acc, course) => {
+        const studentCount = course.students.length;
+        acc.totalStudents += studentCount;
+        acc.totalProfit += course.pricing * studentCount;
+
+        course.students.forEach((student) => {
+          acc.studentList.push({
+            courseTitle: course.title,
+            studentName: student.studentName,
+            studentEmail: student.studentEmail,
+          });
+        });
+
+        return acc;
+      },
+      {
+        totalStudents: 0,
+        totalProfit: 0,
+        studentList: [],
+      }
+    );
+
+    return {
+      totalProfit,
+      totalStudents,
+      studentList,
+    };
+  }
+
+  console.log(calculateTotalStudentsAndProfit());
+
+  const config = [
+    {
+      icon: Users,
+      label: "Total Students",
+      value: calculateTotalStudentsAndProfit().totalStudents,
+    },
+    {
+      icon: DollarSign,
+      label: "Total Revenue",
+      value: calculateTotalStudentsAndProfit().totalProfit,
+    },
+  ];
 
   return (
-    <Card>
-      <CardHeader className="flex justify-between flex-row items-center">
-        <CardTitle className="text-3xl font-extrabold">All Courses</CardTitle>
-        <Button
-          onClick={() => {
-            setCurrentEditedCourseId(null);
-            setCourseLandingFormData(courseLandingInitialFormData);
-            setCourseCurriculumFormData(courseCurriculumInitialFormData);
-            navigate("/instructor/create-new-course");
-          }}
-          className="p-6"
-        >
-          Create New Course
-        </Button>
-      </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Course</TableHead>
-                <TableHead>Students</TableHead>
-                <TableHead>Revenue</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {listOfCourses && listOfCourses.length > 0
-                ? listOfCourses.map((course) => (
-                    <TableRow>
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {config.map((item, index) => (
+          <Card key={index}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {item.label}
+              </CardTitle>
+              <item.icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{item.value}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Students List</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table className="w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Course Name</TableHead>
+                  <TableHead>Student Name</TableHead>
+                  <TableHead>Student Email</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {calculateTotalStudentsAndProfit().studentList.map(
+                  (studentItem, index) => (
+                    <TableRow key={index}>
                       <TableCell className="font-medium">
-                        {course?.title}
+                        {studentItem.courseTitle}
                       </TableCell>
-                      <TableCell>{course?.students?.length}</TableCell>
-                      <TableCell>
-                        ${course?.students?.length * course?.pricing}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Button
-                          onClick={() => {
-                            navigate(`/instructor/edit-course/${course?._id}`);
-                          }}
-                          variant="ghost"
-                          size="sm"
-                        >
-                          <Edit className="h-6 w-6" />
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <Delete className="h-6 w-6" />
-                        </Button>
-                      </TableCell>
+                      <TableCell>{studentItem.studentName}</TableCell>
+                      <TableCell>{studentItem.studentEmail}</TableCell>
                     </TableRow>
-                  ))
-                : null}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
+                  )
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
-export default InstructorCourses;
+export default InstructorDashboard;

@@ -16,7 +16,21 @@ export default function AuthProvider({ children }) {
 
   async function handleRegisterUser(event) {
     event.preventDefault();
-    const data = await registerService(signUpFormData);
+    try {
+      const data = await registerService(signUpFormData);
+      if (data.success) {
+        // Handle success, perhaps redirect or show message
+        console.log("Registration successful");
+      } else {
+        // Handle error
+        console.error("Registration failed:", data.message);
+      }
+    } catch (error) {
+      console.error(
+        "Registration error:",
+        error.response?.data?.message || error.message
+      );
+    }
   }
 
   async function handleLoginUser(event) {
