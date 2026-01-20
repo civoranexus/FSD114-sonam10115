@@ -1,5 +1,5 @@
 import { courseCategories } from "@/config";
-import banner from "../../../../public/hero-image.jpg";
+import { heroLogos } from "../../constant/data";
 import { Button } from "@/components/ui/button";
 import { useContext, useEffect } from "react";
 import { StudentContext } from "@/context/student-context";
@@ -9,6 +9,10 @@ import {
 } from "@/services";
 import { AuthContext } from "@/context/auth-context";
 import { useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
+import * as variants from "../../../motion/animation";
+import { RiPlayFill } from "@remixicon/react";
+import Marquee from "react-fast-marquee";
 
 function StudentHomePage() {
   const { studentViewCoursesList, setStudentViewCoursesList } =
@@ -36,7 +40,7 @@ function StudentHomePage() {
   async function handleCourseNavigate(getCurrentCourseId) {
     const response = await checkCoursePurchaseInfoService(
       getCurrentCourseId,
-      auth?.user?._id
+      auth?.user?._id,
     );
 
     if (response?.success) {
@@ -53,70 +57,156 @@ function StudentHomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      <section className="flex flex-col lg:flex-row items-center justify-between py-8 px-4 lg:px-8">
-        <div className="lg:w-1/2 lg:pr-12">
-          <h1 className="text-4xl font-bold mb-4">Learning thet gets you</h1>
-          <p className="text-xl">
-            Skills for your present and your future. Get Started with US
-          </p>
-        </div>
-        <div className="lg:w-full mb-8 lg:mb-0">
-          <img
-            src={banner}
-            width={600}
-            height={400}
-            className="w-full h-auto rounded-lg shadow-lg"
-          />
-        </div>
-      </section>
-      <section className="py-8 px-4 lg:px-8 bg-gray-100">
-        <h2 className="text-2xl font-bold mb-6">Course Categories</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {courseCategories.map((categoryItem) => (
-            <Button
-              className="justify-start"
-              variant="outline"
-              key={categoryItem.id}
-              onClick={() => handleNavigateToCoursesPage(categoryItem.id)}
+    <section className="overflow-x-hidden w-full">
+      {/* <section> */}
+      <motion.div
+        variants={variants.staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="container overflow-x-hidden"
+      >
+        {/* content */}
+        <div className="text-center bg-[#142C52]">
+          {/* {title} */}
+          <div className="relative  max-w-full pt-8 pl-8">
+            <motion.span
+              variants={variants.fadeInUp}
+              className="absolute top-0 left-0"
             >
-              {categoryItem.label}
-            </Button>
-          ))}
-        </div>
-      </section>
-      <section className="py-12 px-4 lg:px-8">
-        <h2 className="text-2xl font-bold mb-6">Featured COourses</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
-            studentViewCoursesList.map((courseItem) => (
-              <div
-                onClick={() => handleCourseNavigate(courseItem?._id)}
-                className="border rounded-lg overflow-hidden shadow cursor-pointer"
-              >
+              <img
+                src="/shape-1.png"
+                alt="title shape"
+                width={39}
+                height={43}
+              />
+            </motion.span>
+            <motion.div
+              variants={variants.fadeInUp}
+              className="flex items-center bg-[#F4F7FA] rounded-lg p-3.5 justify-center gap-2.5 max-w-max mx-auto flex-wrap text-center "
+            >
+              <span>
                 <img
-                  src={courseItem?.image}
-                  width={300}
-                  height={150}
-                  className="w-full h-40 object-cover"
+                  src="/shape-2.png"
+                  alt="title shape"
+                  width={48}
+                  height={48}
                 />
-                <div className="p-4">
-                  <h3 className="font-bold mb-2">{courseItem?.title}</h3>
-                  <p className="text-sm text-gray-700 mb-2">
-                    {courseItem?.instructorName}
-                  </p>
-                  <p className="font-bold text-[16px]">
-                    ${courseItem?.pricing}
-                  </p>
+              </span>
+              <motion.h1
+                variants={variants.fadeInUp}
+                className="text-2xl md:text-4xl font-bold text-[#142C52]"
+              >
+                <span className="text-orange-500">unlock</span> your creative
+                potential
+              </motion.h1>
+            </motion.div>
+          </div>
+          <motion.p
+            variants={variants.fadeInUp}
+            className="text-2xl font-medium mt-4 md:text-[28px] text-[#F4F7FA]"
+          >
+            with Online Design and Development Courses.
+          </motion.p>
+          <motion.p
+            variants={variants.fadeInUp}
+            className="mt-4 text-lg text-[#F4F7FA]"
+          >
+            Learn from Industry Experts and Enhance Your Skills.
+          </motion.p>
+
+          {/* buttons wrapper */}
+          <div className="flex items-center justify-center gap-3 mt-12 flex-wrap">
+            <motion.button
+              variants={variants.fadeInUp}
+              className="primary-btn max-sm:[80%]"
+            >
+              Explore Courses
+            </motion.button>
+            <motion.button
+              variants={variants.fadeInUp}
+              className="secondary-btn"
+            >
+              View Pricing
+            </motion.button>
+          </div>
+
+          {/* client logo */}
+
+          <motion.div
+            variants={variants.fadeIn}
+            className="mt-8 lg:mt-[100px] relative overflow-hidden"
+          >
+            <Marquee pauseOnHover={true}>
+              {heroLogos.map((logo) => (
+                //logo
+                <div
+                  className="px-2 sm:px-4 md:px-14 py-5 bg-[#F4F7FA]"
+                  key={logo.id}
+                >
+                  <img src={logo.img} alt="logo" className="w-auto h-7" />
                 </div>
-              </div>
-            ))
-          ) : (
-            <h1>No Courses Found</h1>
-          )}
+              ))}
+            </Marquee>
+            <div className="absolute top-0 left-0 bg-gradient-to-1 from-white-97 via-white-97/80 to-transparent w-6 sm:w-24 h-full z-10"></div>
+          </motion.div>
         </div>
-      </section>
-    </div>
+        {/* Banner */}
+        <motion.figure
+          variants={variants.fadeIn}
+          className="relative mt-10 md:mt-14 lg:mt-[50px] max-w-full w-full h-[300px] md:h-[500px] mx-auto rounded-xl overflow-hidden"
+        >
+          <img
+            src="/hero-image.jpg"
+            alt="hero-banner"
+            className="w-full h-full object-cover"
+          />
+        </motion.figure>
+      </motion.div>
+
+      {/* </section> */}
+
+      <h2 className="text-2xl font-bold mb-6">Course Categories</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {courseCategories.map((categoryItem) => (
+          <Button
+            className="justify-start"
+            variant="outline"
+            key={categoryItem.id}
+            onClick={() => handleNavigateToCoursesPage(categoryItem.id)}
+          >
+            {categoryItem.label}
+          </Button>
+        ))}
+      </div>
+      <h2 className="text-2xl font-bold mb-6">Featured Courses</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
+          studentViewCoursesList.map((courseItem) => (
+            <div
+              onClick={() => handleCourseNavigate(courseItem?._id)}
+              className="border rounded-lg overflow-hidden shadow cursor-pointer"
+            >
+              <img
+                src={courseItem?.image}
+                width={300}
+                height={150}
+                className="w-full h-40 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="font-bold mb-2">{courseItem?.title}</h3>
+                <p className="text-sm text-gray-700 mb-2">
+                  {courseItem?.instructorName}
+                </p>
+                <p className="font-bold text-[16px]">${courseItem?.pricing}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <h1>No Courses Found</h1>
+        )}
+      </div>
+    </section>
   );
 }
 
