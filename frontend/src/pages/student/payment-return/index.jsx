@@ -17,7 +17,7 @@ function PaypalPaymentReturnPage() {
         const response = await captureAndFinalizePaymentService(
           paymentId,
           payerId,
-          orderId
+          orderId,
         );
 
         if (response?.success) {

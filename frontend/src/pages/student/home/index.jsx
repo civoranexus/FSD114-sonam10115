@@ -64,23 +64,12 @@ function StudentHomePage() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
-        className="container overflow-x-hidden"
+        className="container "
       >
         {/* content */}
         <div className="text-center bg-[#142C52]">
           {/* {title} */}
           <div className="relative  max-w-full pt-8 pl-8">
-            <motion.span
-              variants={variants.fadeInUp}
-              className="absolute top-0 left-0"
-            >
-              <img
-                src="/shape-1.png"
-                alt="title shape"
-                width={39}
-                height={43}
-              />
-            </motion.span>
             <motion.div
               variants={variants.fadeInUp}
               className="flex items-center bg-[#F4F7FA] rounded-lg p-3.5 justify-center gap-2.5 max-w-max mx-auto flex-wrap text-center "
@@ -97,7 +86,7 @@ function StudentHomePage() {
                 variants={variants.fadeInUp}
                 className="text-2xl md:text-4xl font-bold text-[#142C52]"
               >
-                <span className="text-orange-500">unlock</span> your creative
+                <span className="text-[#1B9AAA]">unlock</span> your creative
                 potential
               </motion.h1>
             </motion.div>
@@ -119,15 +108,9 @@ function StudentHomePage() {
           <div className="flex items-center justify-center gap-3 mt-12 flex-wrap">
             <motion.button
               variants={variants.fadeInUp}
-              className="primary-btn max-sm:[80%]"
+              className="max-sm:[80%]"
             >
-              Explore Courses
-            </motion.button>
-            <motion.button
-              variants={variants.fadeInUp}
-              className="secondary-btn"
-            >
-              View Pricing
+              <Button className=" bg-[#1B9AAA] "> Explore Courses</Button>
             </motion.button>
           </div>
 
@@ -141,7 +124,7 @@ function StudentHomePage() {
               {heroLogos.map((logo) => (
                 //logo
                 <div
-                  className="px-2 sm:px-4 md:px-14 py-5 bg-[#F4F7FA]"
+                  className="px-2 sm:px-4 md:px-14 py-5 bg-[#F4F7FA] max-w-screen-full"
                   key={logo.id}
                 >
                   <img src={logo.img} alt="logo" className="w-auto h-7" />

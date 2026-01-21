@@ -57,7 +57,7 @@ function StudentViewCourseDetailsPage() {
     // }
 
     const response = await fetchStudentViewCourseDetailsService(
-      currentCourseDetailsId
+      currentCourseDetailsId,
     );
 
     if (response?.success) {
@@ -99,7 +99,7 @@ function StudentViewCourseDetailsPage() {
     if (response.success) {
       sessionStorage.setItem(
         "currentOrderId",
-        JSON.stringify(response?.data?.orderId)
+        JSON.stringify(response?.data?.orderId),
       );
       setApprovalUrl(response?.data?.approveUrl);
     }
@@ -119,9 +119,9 @@ function StudentViewCourseDetailsPage() {
 
   useEffect(() => {
     if (!location.pathname.includes("course/details"))
-      setStudentViewCourseDetails(null),
+      (setStudentViewCourseDetails(null),
         setCurrentCourseDetailsId(null),
-        setCoursePurchaseId(null);
+        setCoursePurchaseId(null));
   }, [location.pathname]);
 
   if (loadingState) return <Skeleton />;
@@ -133,7 +133,7 @@ function StudentViewCourseDetailsPage() {
   const getIndexOfFreePreviewUrl =
     studentViewCourseDetails !== null
       ? studentViewCourseDetails?.curriculum?.findIndex(
-          (item) => item.freePreview
+          (item) => item.freePreview,
         )
       : -1;
 
@@ -210,7 +210,7 @@ function StudentViewCourseDetailsPage() {
                     )}
                     <span>{curriculumItem?.title}</span>
                   </li>
-                )
+                ),
               )}
             </CardContent>
           </Card>

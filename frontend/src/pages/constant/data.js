@@ -71,6 +71,16 @@ export const heroLogos = [
         img: "/logo-7.png",
         width: 65,
     },
+    {
+        id: 4,
+        img: "/logo-4.png",
+        width: 64,
+    },
+    {
+        id: 2,
+        img: "/logo-2.png",
+        width: 82,
+    },
 ];
 
 export const benefitItems = [

@@ -63,7 +63,7 @@ function StudentViewCoursesPage() {
       console.log(cpyFilters);
     } else {
       const indexOfCurrentOption = cpyFilters[getSectionId].indexOf(
-        getCurrentOption.id
+        getCurrentOption.id,
       );
 
       if (indexOfCurrentOption === -1)
@@ -90,7 +90,7 @@ function StudentViewCoursesPage() {
   async function handleCourseNavigate(getCurrentCourseId) {
     const response = await checkCoursePurchaseInfoService(
       getCurrentCourseId,
-      auth?.user?._id
+      auth?.user?._id,
     );
 
     if (response?.success) {

@@ -67,7 +67,7 @@ function CourseCurriculum() {
         setMediaUploadProgress(true);
         const response = await mediaUploadService(
           videoFormData,
-          setMediaUploadProgressPercentage
+          setMediaUploadProgressPercentage,
         );
         if (response.success) {
           let cpyCourseCurriculumFormData = [...courseCurriculumFormData];
@@ -91,7 +91,7 @@ function CourseCurriculum() {
       cpyCourseCurriculumFormData[currentIndex].public_id;
 
     const deleteCurrentMediaResponse = await mediaDeleteService(
-      getCurrentVideoPublicId
+      getCurrentVideoPublicId,
     );
 
     if (deleteCurrentMediaResponse?.success) {
@@ -141,7 +141,7 @@ function CourseCurriculum() {
       setMediaUploadProgress(true);
       const response = await mediaBulkUploadService(
         bulkFormData,
-        setMediaUploadProgressPercentage
+        setMediaUploadProgressPercentage,
       );
 
       console.log(response, "bulk");
@@ -179,7 +179,7 @@ function CourseCurriculum() {
 
     if (response?.success) {
       cpyCourseCurriculumFormData = cpyCourseCurriculumFormData.filter(
-        (_, index) => index !== currentIndex
+        (_, index) => index !== currentIndex,
       );
 
       setCourseCurriculumFormData(cpyCourseCurriculumFormData);

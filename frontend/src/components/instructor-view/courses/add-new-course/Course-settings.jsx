@@ -27,7 +27,7 @@ function CourseSettings() {
         setMediaUploadProgress(true);
         const response = await mediaUploadService(
           imageFormData,
-          setMediaUploadProgressPercentage
+          setMediaUploadProgressPercentage,
         );
         if (response.success) {
           setCourseLandingFormData({

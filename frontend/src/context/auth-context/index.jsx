@@ -28,7 +28,7 @@ export default function AuthProvider({ children }) {
     } catch (error) {
       console.error(
         "Registration error:",
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
   }
@@ -41,7 +41,7 @@ export default function AuthProvider({ children }) {
     if (data.success) {
       sessionStorage.setItem(
         "accessToken",
-        JSON.stringify(data.data.accessToken)
+        JSON.stringify(data.data.accessToken),
       );
       setAuth({
         authenticate: true,

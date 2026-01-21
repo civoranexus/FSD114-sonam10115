@@ -83,7 +83,7 @@ function AddNewCoursePage() {
       currentEditedCourseId !== null
         ? await updateCourseByIdService(
             currentEditedCourseId,
-            courseFinalFormData
+            courseFinalFormData,
           )
         : await addNewCourseService(courseFinalFormData);
 
@@ -99,12 +99,12 @@ function AddNewCoursePage() {
 
   async function fetchCurrentCourseDetails() {
     const response = await fetchInstructorCourseDetailsService(
-      currentEditedCourseId
+      currentEditedCourseId,
     );
 
     if (response?.success) {
       const setCourseFormData = Object.keys(
-        courseLandingInitialFormData
+        courseLandingInitialFormData,
       ).reduce((acc, key) => {
         acc[key] = response?.data[key] || courseLandingInitialFormData[key];
 

@@ -64,13 +64,13 @@ function StudentViewCourseProgressPage() {
             (acc, obj, index) => {
               return acc === -1 && obj.viewed ? index : acc;
             },
-            -1
+            -1,
           );
 
           setCurrentLecture(
             response?.data?.courseDetails?.curriculum[
               lastIndexOfViewedAsTrue + 1
-            ]
+            ],
           );
         }
       }
@@ -82,7 +82,7 @@ function StudentViewCourseProgressPage() {
       const response = await markLectureAsViewedService(
         auth?.user?._id,
         studentCurrentCourseProgress?.courseDetails?._id,
-        currentLecture._id
+        currentLecture._id,
       );
 
       if (response?.success) {
@@ -94,7 +94,7 @@ function StudentViewCourseProgressPage() {
   async function handleRewatchCourse() {
     const response = await resetCourseProgressService(
       auth?.user?._id,
-      studentCurrentCourseProgress?.courseDetails?._id
+      studentCurrentCourseProgress?.courseDetails?._id,
     );
 
     if (response?.success) {
@@ -192,7 +192,7 @@ function StudentViewCourseProgressPage() {
                         key={item._id}
                       >
                         {studentCurrentCourseProgress?.progress?.find(
-                          (progressItem) => progressItem.lectureId === item._id
+                          (progressItem) => progressItem.lectureId === item._id,
                         )?.viewed ? (
                           <Check className="h-4 w-4 text-green-500" />
                         ) : (
@@ -200,7 +200,7 @@ function StudentViewCourseProgressPage() {
                         )}
                         <span>{item?.title}</span>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
               </ScrollArea>
