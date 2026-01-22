@@ -13,6 +13,7 @@ import { motion } from "motion/react";
 import * as variants from "../../../motion/animation";
 import { RiPlayFill } from "@remixicon/react";
 import Marquee from "react-fast-marquee";
+import Benefit from "./benefit";
 
 function StudentHomePage() {
   const { studentViewCoursesList, setStudentViewCoursesList } =
@@ -146,6 +147,8 @@ function StudentHomePage() {
           />
         </motion.figure>
       </motion.div>
+
+      <Benefit />
 
       {/* </section> */}
 
