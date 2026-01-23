@@ -20,7 +20,7 @@ const Benifits = () => {
       >
         {/* title  */}
         <Title
-          title="Benifits"
+          title="Benefits"
           text="lorem ipsum dolor sit amet consectetur. Tempus tincidunt etiam eget elit id imperdiet et. Cras eu sit dignissim lorem nibh et. Ac cum eget habitasse in velit fringilla feugiat senectus in."
           link="view All"
         />

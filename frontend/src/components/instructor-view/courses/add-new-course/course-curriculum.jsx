@@ -81,6 +81,7 @@ function CourseCurriculum() {
         }
       } catch (error) {
         console.log(error);
+        console.log("Video upload failed");
       }
     }
   }
