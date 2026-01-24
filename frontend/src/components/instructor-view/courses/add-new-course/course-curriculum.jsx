@@ -78,10 +78,15 @@ function CourseCurriculum() {
           };
           setCourseCurriculumFormData(cpyCourseCurriculumFormData);
           setMediaUploadProgress(false);
+        } else {
+          alert("Upload failed. Please try again.");
+          setMediaUploadProgress(false);
         }
       } catch (error) {
         console.log(error);
         console.log("Video upload failed");
+        alert("Video upload failed. Check backend endpoint.");
+        setMediaUploadProgress(false);
       }
     }
   }

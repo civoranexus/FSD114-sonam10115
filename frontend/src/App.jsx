@@ -6,6 +6,7 @@ import { AuthContext } from "./context/auth-context";
 import InstructorDashboardpage from "./pages/instructor";
 import StudentViewCommonLayout from "./components/student-view/common-layout";
 import StudentHomePage from "./pages/student/home";
+import StudentBenefitPage from "./pages/student/home/benefit";
 import NotFoundPage from "./pages/not-found";
 import AddNewCoursePage from "./pages/instructor/add-new-course";
 import StudentViewCoursesPage from "./pages/student/courses";
@@ -87,6 +88,8 @@ function App() {
       >
         <Route path="" element={<StudentHomePage />} />
         <Route path="home" element={<StudentHomePage />} />
+        <Route path="Benefit" element={<StudentBenefitPage />} />
+
         <Route path="courses" element={<StudentViewCoursesPage />} />
         <Route
           path="course/details/:id"

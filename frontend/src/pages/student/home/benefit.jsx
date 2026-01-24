@@ -8,7 +8,7 @@ import { RiArrowRightUpLine } from "@remixicon/react";
 import { motion } from "motion/react";
 import * as variants from "../../../motion/animation";
 
-const Benifits = () => {
+const StudentBenefitPage = () => {
   return (
     <section className=".section">
       <motion.div
@@ -34,7 +34,11 @@ const Benifits = () => {
               className=" bg-[#F4F7FA] p-10 flex flex-col rounded-xl "
             >
               {/* // icon */}
-              <div className="bg-[#1B9AAA] w-[55%] h-24 flex items-center justify-center mx-auto rounded-xl mb-7">
+              <div
+                className="bg-[#1B9AAA] w-[55%] h-24 flex items-center justify-center mx-auto rounded-x47
+              +47
+              l mb-7"
+              >
                 <img src={item.icon} alt={item.title} width={64} height={64} />
               </div>
               {/* content  */}
@@ -44,7 +48,7 @@ const Benifits = () => {
               </div>
 
               {/* button  */}
-              <button className="mt-auto ml-auto border border-[#FFFFFF] w-14 h-14 flrx items-center justify-center rounded-md text-black transition-colors hover:bg-[#142C52] hover:text-white">
+              <button className="mt-auto ml-auto border border-[#FFFFFF] w-14 h-14 flex items-center justify-center rounded-md text-black transition-colors hover:bg-[#142C52] hover:text-white">
                 <RiArrowRightUpLine size={26} />
               </button>
             </motion.div>
@@ -55,4 +59,4 @@ const Benifits = () => {
   );
 };
 
-export default Benifits;
+export default StudentBenefitPage;

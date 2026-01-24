@@ -32,7 +32,7 @@ app.use('/auth', authRoutes);
 app.use('/api', authRoutes);
 
 app.use('/instructor', instructorCourseRoutes);
-app.use('/instructor', instructorMediaRoutes);
+app.use('/media', instructorMediaRoutes);
 
 app.use('/student', studentCourseRoutes);
 app.use('/student', studentProgressRoutes);

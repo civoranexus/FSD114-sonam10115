@@ -12,10 +12,15 @@ const Title = ({ title, text, link }) => {
     gap-4"
     >
       <div>
-        <motion.h2 variants={variants.fadeInUp}>{title}</motion.h2>
+        <motion.h2
+          variants={variants.fadeInUp}
+          className="text-3xl md:text-4xl font-bold"
+        >
+          {title}
+        </motion.h2>
         <motion.p
           variants={variants.fadeInUp}
-          className="max-w-[630px] mt-4 mb-5"
+          className="max-w-[630px] mt-4 mb-5 text-lg md:text-xl text-gray-600  "
         >
           {text}
         </motion.p>
