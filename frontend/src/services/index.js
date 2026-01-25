@@ -105,7 +105,7 @@ export async function checkCoursePurchaseInfoService(courseId, studentId) {
 }
 
 export async function createPaymentService(formData) {
-  const { data } = await axiosInstance.post(`/student/order/create`, formData);
+  const { data } = await axiosInstance.post(`/student/create`, formData);
 
   return data;
 }
@@ -115,7 +115,7 @@ export async function captureAndFinalizePaymentService(
   payerId,
   orderId
 ) {
-  const { data } = await axiosInstance.post(`/student/order/capture`, {
+  const { data } = await axiosInstance.post(`/student/capture`, {
     paymentId,
     payerId,
     orderId,

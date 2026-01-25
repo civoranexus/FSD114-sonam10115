@@ -39,17 +39,43 @@ function StudentHomePage() {
   }
 
   async function handleCourseNavigate(getCurrentCourseId) {
-    const response = await checkCoursePurchaseInfoService(
+    console.log(
+      "handleCourseNavigate called with courseId:",
       getCurrentCourseId,
-      auth?.user?._id,
     );
-
-    if (response?.success) {
-      if (response?.data) {
-        navigate(`/course-progress/${getCurrentCourseId}`);
-      } else {
-        navigate(`/course/details/${getCurrentCourseId}`);
+    try {
+      if (!auth?.user?._id) {
+        console.error("User not authenticated, auth:", auth);
+        navigate("/login");
+        return;
       }
+
+      console.log(
+        "Calling checkCoursePurchaseInfoService with courseId:",
+        getCurrentCourseId,
+        "studentId:",
+        auth.user._id,
+      );
+      const response = await checkCoursePurchaseInfoService(
+        getCurrentCourseId,
+        auth?.user?._id,
+      );
+
+      console.log("Response from service:", response);
+      if (response?.success) {
+        if (response?.data) {
+          console.log("Navigating to course-progress");
+          navigate(`/course-progress/${getCurrentCourseId}`);
+        } else {
+          console.log("Navigating to course details");
+          navigate(`/course/details/${getCurrentCourseId}`);
+        }
+      } else {
+        console.error("Service response not successful:", response);
+      }
+    } catch (error) {
+      console.error("Axios error in handleCourseNavigate:", error);
+      // Optionally, show a toast or alert to the user
     }
   }
 
@@ -58,14 +84,14 @@ function StudentHomePage() {
   }, []);
 
   return (
-    <section className="overflow-x-hidden w-full">
+    <section className="overflow-x-hidden w-full pr-0">
       {/* <section> */}
       <motion.div
         variants={variants.staggerContainer}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
-        className="container "
+        className="container pr-0"
       >
         {/* content */}
         <div className="text-center bg-[#142C52]">
@@ -119,7 +145,7 @@ function StudentHomePage() {
 
           <motion.div
             variants={variants.fadeIn}
-            className="mt-8 lg:mt-[100px] relative overflow-hidden"
+            className="mt-8 lg:mt-[100px] relative overflow-hidden pr-0"
           >
             <Marquee pauseOnHover={true}>
               {heroLogos.map((logo) => (
@@ -132,7 +158,8 @@ function StudentHomePage() {
                 </div>
               ))}
             </Marquee>
-            <div className="absolute top-0 left-0 bg-gradient-to-1 from-white-97 via-white-97/80 to-transparent w-6 sm:w-24 h-full z-10"></div>
+            <div className="absolute top-0 left-0 bg-gradient-to-r from-white via-white/80 to-transparent w-6 sm:w-24 h-full z-10"></div>
+            <div className="absolute top-0 right-0 bg-gradient-to-l from-white via-white/80 to-transparent w-6 sm:w-24 h-full z-10"></div>
           </motion.div>
         </div>
         {/* Banner */}
@@ -184,7 +211,18 @@ function StudentHomePage() {
                 <p className="text-sm text-gray-700 mb-2">
                   {courseItem?.instructorName}
                 </p>
-                <p className="font-bold text-[16px]">${courseItem?.pricing}</p>
+                <p className="font-bold text-[16px] mb-4">
+                  ${courseItem?.pricing}
+                </p>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent card click
+                    handleCourseNavigate(courseItem?._id);
+                  }}
+                  className="w-full bg-[#1B9AAA] hover:bg-[#142C52] text-white"
+                >
+                  Buy Now
+                </Button>
               </div>
             </div>
           ))
