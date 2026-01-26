@@ -7,9 +7,9 @@ const {
 } = require("../../controller/instructor-controller/course-controller");
 const router = express.Router();
 
-router.post("/add", addNewCourse);
-router.get("/get", getAllCourses);
-router.get("/get/details/:id", getCourseDetailsByID);
-router.put("/update/:id", updateCourseByID);
+router.post("/course/add", addNewCourse);
+router.get("/course/get", getAllCourses);
+router.get("/course/get/details/:id", getCourseDetailsByID);
+router.put("/course/update/:id", updateCourseByID);
 
 module.exports = router;

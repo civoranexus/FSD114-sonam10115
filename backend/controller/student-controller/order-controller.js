@@ -39,7 +39,7 @@ const createOrder = async (req, res) => {
                             {
                                 name: courseTitle,
                                 sku: courseId,
-                                price: coursePricing,
+                                price: coursePricing.toString(),
                                 currency: "USD",
                                 quantity: 1,
                             },
@@ -54,9 +54,10 @@ const createOrder = async (req, res) => {
             ],
         };
 
+        console.log("Creating PayPal payment with:", create_payment_json);
         paypal.payment.create(create_payment_json, async (error, paymentInfo) => {
             if (error) {
-                console.log(error);
+                console.log("PayPal error:", error);
                 return res.status(500).json({
                     success: false,
                     message: "Error while creating paypal payment!",

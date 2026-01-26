@@ -6,7 +6,7 @@ const {
 
 const router = express.Router();
 
-router.post("/create", createOrder);
-router.post("/capture", capturePaymentAndFinalizeOrder);
+router.post("/order/create", createOrder);
+router.post("/order/capture", capturePaymentAndFinalizeOrder);
 
 module.exports = router;
