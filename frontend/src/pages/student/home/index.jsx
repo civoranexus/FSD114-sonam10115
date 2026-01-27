@@ -14,6 +14,7 @@ import * as variants from "../../../motion/animation";
 import { RiPlayFill } from "@remixicon/react";
 import Marquee from "react-fast-marquee";
 import StudentBenefitPage from "./benefit";
+import Footer from "./footer";
 
 function StudentHomePage() {
   const { studentViewCoursesList, setStudentViewCoursesList } =
@@ -137,7 +138,9 @@ function StudentHomePage() {
               variants={variants.fadeInUp}
               className="max-sm:[80%]"
             >
-              <Button className=" bg-[#1B9AAA] "> Explore Courses</Button>
+              <Button className=" bg-[#1B9AAA] ">
+                <a href="courses">Explore Courses</a>
+              </Button>
             </motion.button>
           </div>
 
@@ -219,7 +222,7 @@ function StudentHomePage() {
                     e.stopPropagation(); // Prevent card click
                     handleCourseNavigate(courseItem?._id);
                   }}
-                  className="w-full bg-[#1B9AAA] hover:bg-[#142C52] text-white"
+                  className="w-full bg-[#4e595a] hover:bg-[#142C52] text-white"
                 >
                   Buy Now
                 </Button>
@@ -230,6 +233,7 @@ function StudentHomePage() {
           <h1>No Courses Found</h1>
         )}
       </div>
+      <Footer></Footer>
     </section>
   );
 }
