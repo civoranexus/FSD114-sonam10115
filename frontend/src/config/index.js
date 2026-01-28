@@ -184,3 +184,17 @@ export const filterOptions = {
   level: courseLevelOptions,
   primaryLanguage: languageOptions,
 };
+
+export const chatMessageFormControls = [
+  {
+    name: "message",
+    label: "Message",
+    placeholder: "Type your message...",
+    type: "text",
+    componentType: "input",
+  },
+];
+
+export const initialChatMessageData = {
+  message: "",
+};

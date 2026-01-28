@@ -17,6 +17,7 @@ import StudentCoursesPage from "./pages/student/student-courses";
 import StudentViewCourseProgressPage from "./pages/student/course-progress";
 import AdminDashboard from "./pages/admin";
 import AdminLayout from "./components/admin-view/layout";
+import Chat from "./pages/student/home/chat";
 
 function App() {
   const { auth } = useContext(AuthContext);
@@ -96,6 +97,7 @@ function App() {
           path="course/details/:id"
           element={<StudentViewCourseDetailsPage />}
         />
+        <Route path="chat" element={<Chat />} />
         <Route path="payment-return" element={<PaypalPaymentReturnPage />} />
         <Route path="payment-cancel" element={<PaypalPaymentCancelPage />} />
         <Route path="student-courses" element={<StudentCoursesPage />} />

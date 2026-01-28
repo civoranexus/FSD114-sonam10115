@@ -26,6 +26,9 @@ const studentCourseRoutes = require('./routes/student-routes/course-routes.js');
 const studentProgressRoutes = require('./routes/student-routes/course-progress-routes.js');
 const studentOrderRoutes = require('./routes/student-routes/order-routes.js');
 const studentCoursesRoutes = require('./routes/student-routes/student-courses-routes.js');
+const chatRoutes = require('./routes/chat-Routes/chatRoutes.js');
+
+app.use('/chat', chatRoutes);
 
 app.use('/', authRoutes);
 app.use('/auth', authRoutes);
