@@ -37,6 +37,28 @@ function StudentViewCourseProgressPage() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const { id } = useParams();
 
+  async function handleOpenChat() {
+    console.log(
+      "FULL COURSE DETAILS ===>",
+      studentCurrentCourseProgress?.courseDetails,
+    );
+
+    const courseId = studentCurrentCourseProgress?.courseDetails?._id;
+    const instructorId =
+      studentCurrentCourseProgress?.courseDetails?.instructorId;
+
+    console.log("CHAT CLICKED");
+    console.log("courseId:", courseId);
+    console.log("instructorId:", instructorId);
+
+    if (!courseId || !instructorId) {
+      console.log("IDs missing, navigation stopped");
+      return;
+    }
+
+    navigate(`/student/chat/${courseId}/${instructorId}`);
+  }
+
   async function fetchCurrentCourseProgress() {
     const response = await getCurrentCourseProgressService(auth?.user?._id, id);
     if (response?.success) {
@@ -158,8 +180,16 @@ function StudentViewCourseProgressPage() {
             onProgressUpdate={setCurrentLecture}
             progressData={currentLecture}
           />
-          <div className="p-6 bg-[#1c1d1f]">
-            <h2 className="text-2xl font-bold mb-2">{currentLecture?.title}</h2>
+          <div className="p-6 bg-[#1c1d1f] flex items-center justify-between">
+            <h2 className="text-2xl font-bold">{currentLecture?.title}</h2>
+
+            {/* MESSAGE BUTTON */}
+            <Button
+              onClick={handleOpenChat}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              Message Instructor 💬
+            </Button>
           </div>
         </div>
         <div

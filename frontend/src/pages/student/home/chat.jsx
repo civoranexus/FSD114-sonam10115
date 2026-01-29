@@ -1,7 +1,10 @@
 import { useEffect } from "react";
-import { useChat } from "@/context/chat-context/index";
+import { useChat } from "@/context/chat-context";
+import { useParams } from "react-router-dom";
 
-const Chat = ({ courseId, otherUserId }) => {
+const Chat = () => {
+  const { courseId, otherUserId } = useParams();
+
   const {
     messages,
     formData,
@@ -11,16 +14,20 @@ const Chat = ({ courseId, otherUserId }) => {
     loading,
   } = useChat();
 
+  console.log("Chat Params:", courseId, otherUserId);
+
   useEffect(() => {
-    fetchMessages(courseId, otherUserId);
+    if (courseId && otherUserId) {
+      fetchMessages(courseId, otherUserId);
+    }
   }, [courseId, otherUserId]);
 
   return (
     <div>
       <h2>Chat</h2>
 
-      <div style={{ minHeight: "300px" }}>
-        {messages.map((msg) => (
+      <div style={{ minHeight: "300px", border: "1px solid #ccc" }}>
+        {messages?.map((msg) => (
           <p key={msg._id}>
             <b>{msg.sender}</b>: {msg.message}
           </p>

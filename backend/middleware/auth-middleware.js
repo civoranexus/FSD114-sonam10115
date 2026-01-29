@@ -5,6 +5,9 @@ module.exports = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization || '';
         const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : (req.cookies && req.cookies.accessToken);
+        console.log("AUTH HEADER:", req.headers.authorization);
+        console.log("COOKIE TOKEN:", req.cookies?.accessToken);
+
 
         if (!token) {
             return res.status(401).json({ success: false, message: 'No token provided' });

@@ -39,10 +39,7 @@ export default function AuthProvider({ children }) {
     console.log(data, "datadatadatadatadata");
 
     if (data.success) {
-      sessionStorage.setItem(
-        "accessToken",
-        JSON.stringify(data.data.accessToken),
-      );
+      sessionStorage.setItem("accessToken", data.data.accessToken);
       setAuth({
         authenticate: true,
         user: data.data.user,

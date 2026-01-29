@@ -97,7 +97,6 @@ function App() {
           path="course/details/:id"
           element={<StudentViewCourseDetailsPage />}
         />
-        <Route path="chat" element={<Chat />} />
         <Route path="payment-return" element={<PaypalPaymentReturnPage />} />
         <Route path="payment-cancel" element={<PaypalPaymentCancelPage />} />
         <Route path="student-courses" element={<StudentCoursesPage />} />
@@ -107,6 +106,30 @@ function App() {
         />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
+
+      {/* STUDENT → TEACHER CHAT */}
+      <Route
+        path="/student/chat/:courseId/:otherUserId"
+        element={
+          <RouteGuard
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+            element={<Chat />}
+          />
+        }
+      />
+
+      {/* TEACHER → STUDENT CHAT */}
+      <Route
+        path="/instructor/chat/:courseId/:otherUserId"
+        element={
+          <RouteGuard
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+            element={<Chat />}
+          />
+        }
+      />
     </Routes>
   );
 }

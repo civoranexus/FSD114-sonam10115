@@ -8,12 +8,16 @@ const isTeacherOnline = (teacher) => {
     const now = new Date();
     const diffInMinutes = (now - teacher.lastActive) / 60000;
 
-    return diffInMinutes < 5; // last 5 min active = online
+    return diffInMinutes < 5;
 };
 
 exports.sendMessage = async (req, res) => {
     const { receiverId, courseId, message } = req.body;
-
+    if (!courseId || !receiverId) {
+        return res.status(400).json({
+            message: "courseId or receiverId missing",
+        });
+    }
     const student = req.user;
     const teacher = await User.findById(receiverId);
 
@@ -26,7 +30,6 @@ exports.sendMessage = async (req, res) => {
         message
     });
 
-    // 👇 HERE isTeacherOnline is used
     if (!isTeacherOnline(teacher)) {
         const aiReply = await getAIReply(message, courseId);
 

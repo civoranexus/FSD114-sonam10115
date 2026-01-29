@@ -1,10 +1,14 @@
 import axiosInstance from "@/api/axiosInstance";
 
-export const sendMessageApi = (data) =>
-  axiosInstance.post("/chat/send", data);
+export async function sendMessageApi(data) {
+  const { data: response } = await axiosInstance.post("/chat/send", data);
+  return response;
+}
 
-export const fetchMessagesApi = (courseId, userId) =>
-  axiosInstance.get(`/chat/${courseId}/${userId}`);
+export async function fetchMessagesApi(courseId, userId) {
+  const { data } = await axiosInstance.get(`/chat/${courseId}/${userId}`);
+  return data;
+}
 
 export async function registerService(formData) {
   const { data } = await axiosInstance.post("/auth/register", {
