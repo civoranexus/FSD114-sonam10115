@@ -1,13 +1,25 @@
 import axiosInstance from "@/api/axiosInstance";
 
 export async function sendMessageApi(data) {
-  const { data: response } = await axiosInstance.post("/chat/send", data);
-  return response;
+  const response = await axiosInstance.post("/chat/send", data);
+  return response.data;
 }
 
 export async function fetchMessagesApi(courseId, userId) {
   const { data } = await axiosInstance.get(`/chat/${courseId}/${userId}`);
   return data;
+}
+
+export async function generateCertificateService(courseId) {
+  const { data } = await axiosInstance.post(`/certificate/generate/${courseId}`);
+  return data;
+}
+
+export async function downloadCertificateService(filename) {
+  const response = await axiosInstance.get(`/certificate/download/${filename}`, {
+    responseType: "blob",
+  });
+  return response.data;
 }
 
 export async function registerService(formData) {

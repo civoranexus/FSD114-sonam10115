@@ -26,9 +26,14 @@ const studentCourseRoutes = require('./routes/student-routes/course-routes.js');
 const studentProgressRoutes = require('./routes/student-routes/course-progress-routes.js');
 const studentOrderRoutes = require('./routes/student-routes/order-routes.js');
 const studentCoursesRoutes = require('./routes/student-routes/student-courses-routes.js');
-const chatRoutes = require('./routes/chat-Routes/chatRoutes.js');
+const chatRoutes = require('./routes/chat-Routes/index.js');
+const certificateRoutes = require('./routes/certificate-routes/index.js');
+
+// Serve static files for certificates
+app.use('/certificates', express.static('certificates'));
 
 app.use('/chat', chatRoutes);
+app.use('/certificate', certificateRoutes);
 
 app.use('/', authRoutes);
 app.use('/auth', authRoutes);

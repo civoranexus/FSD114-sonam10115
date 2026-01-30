@@ -1,7 +1,12 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 
 module.exports = async (req, res, next) => {
+
+    if (req.method === "OPTIONS") {
+        return next();
+    }
     try {
         const authHeader = req.headers.authorization || '';
         const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : (req.cookies && req.cookies.accessToken);

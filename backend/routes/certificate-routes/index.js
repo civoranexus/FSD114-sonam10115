@@ -1,9 +1,15 @@
-// routes/certificateRoutes.js
-import express from "express";
-import { generateCertificateAPI } from "../controllers/certificateController.js";
-
+const express = require("express");
 const router = express.Router();
+const {
+    generateCertificate,
+    downloadCertificate,
+} = require("../../controller/certificate-controller/index.js");
+const authenticateMiddleware = require("../../middleware/auth-middleware.js");
 
-router.get("/generate/:enrollmentId", generateCertificateAPI);
+// Generate certificate (requires authentication)
+router.post("/generate/:courseId", authenticateMiddleware, generateCertificate);
 
-export default router;
+// Download certificate
+router.get("/download/:filename", downloadCertificate);
+
+module.exports = router;

@@ -2,20 +2,29 @@ const mongoose = require("mongoose");
 
 const chatMessageSchema = new mongoose.Schema(
     {
-        sender: {
+        senderId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
             required: true,
+            ref: "User",
         },
-        receiver: {
+        receiverId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
             required: true,
+            ref: "User",
         },
         courseId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Course",
             required: true,
+            ref: "Course",
+        },
+        senderRole: {
+            type: String,
+            enum: ["student", "teacher", "ai"],
+            required: true,
+        },
+        isAI: {
+            type: Boolean,
+            default: false,
         },
         message: {
             type: String,
