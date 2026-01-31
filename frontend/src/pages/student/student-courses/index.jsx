@@ -84,7 +84,7 @@ function StudentCoursesPage() {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
-                      }
+                      },
                     )}
                   </p>
                 </div>

@@ -10,6 +10,11 @@ export async function fetchMessagesApi(courseId, userId) {
   return data;
 }
 
+export async function fetchInstructorConversationsService() {
+  const { data } = await axiosInstance.get(`/chat/instructor/conversations`);
+  return data;
+}
+
 export async function generateCertificateService(courseId) {
   const { data } = await axiosInstance.post(`/certificate/generate/${courseId}`);
   return data;

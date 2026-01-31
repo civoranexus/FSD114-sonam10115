@@ -19,10 +19,18 @@ import {
   markLectureAsViewedService,
   resetCourseProgressService,
 } from "@/services";
-import { Check, ChevronLeft, ChevronRight, Play } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  MessageCircle,
+  Download,
+} from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { useNavigate, useParams } from "react-router-dom";
+import Chat from "@/pages/student/home/chat";
 
 function StudentViewCourseProgressPage() {
   const navigate = useNavigate();
@@ -36,6 +44,11 @@ function StudentViewCourseProgressPage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const { id } = useParams();
+  const [showChatSidebar, setShowChatSidebar] = useState(false);
+  const [chatTarget, setChatTarget] = useState({
+    courseId: null,
+    instructorId: null,
+  });
 
   async function handleOpenChat() {
     console.log(
@@ -56,7 +69,30 @@ function StudentViewCourseProgressPage() {
       return;
     }
 
-    navigate(`/student/chat/${courseId}/${instructorId}`);
+    // Open chat inside the right sidebar (embedded)
+    setChatTarget({ courseId, instructorId });
+    setShowChatSidebar(true);
+  }
+
+  async function handleDownloadLecture() {
+    if (!currentLecture?.videoUrl) {
+      alert("Video URL not available for download");
+      return;
+    }
+
+    try {
+      // Create a temporary link to download the video
+      const link = document.createElement("a");
+      link.href = currentLecture.videoUrl;
+      link.setAttribute("download", currentLecture?.title || "lecture.mp4");
+      link.setAttribute("target", "_blank");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Download error:", error);
+      alert("Failed to download lecture");
+    }
   }
 
   async function fetchCurrentCourseProgress() {
@@ -183,13 +219,24 @@ function StudentViewCourseProgressPage() {
           <div className="p-6 bg-[#1c1d1f] flex items-center justify-between">
             <h2 className="text-2xl font-bold">{currentLecture?.title}</h2>
 
-            {/* MESSAGE BUTTON */}
-            <Button
-              onClick={handleOpenChat}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Message Instructor 💬
-            </Button>
+            {/* BUTTONS SECTION */}
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={handleOpenChat}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <MessageCircle className="mr-2 h-4 w-4" />
+                Message Instructor
+              </Button>
+              <Button
+                onClick={handleDownloadLecture}
+                variant="outline"
+                className="bg-green-500 hover:text-black"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download Lecture
+              </Button>
+            </div>
           </div>
         </div>
         <div
@@ -197,55 +244,87 @@ function StudentViewCourseProgressPage() {
             isSideBarOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <Tabs defaultValue="content" className="h-full flex flex-col">
-            <TabsList className="grid bg-[#1c1d1f] w-full grid-cols-2 p-0 h-14">
-              <TabsTrigger
-                value="content"
-                className=" text-black rounded-none h-full"
-              >
-                Course Content
-              </TabsTrigger>
-              <TabsTrigger
-                value="overview"
-                className=" text-black rounded-none h-full"
-              >
-                Overview
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="content">
-              <ScrollArea className="h-full">
-                <div className="p-4 space-y-4">
-                  {studentCurrentCourseProgress?.courseDetails?.curriculum.map(
-                    (item) => (
-                      <div
-                        className="flex items-center space-x-2 text-sm text-white font-bold cursor-pointer"
-                        key={item._id}
-                      >
-                        {studentCurrentCourseProgress?.progress?.find(
-                          (progressItem) => progressItem.lectureId === item._id,
-                        )?.viewed ? (
-                          <Check className="h-4 w-4 text-green-500" />
-                        ) : (
-                          <Play className="h-4 w-4 " />
-                        )}
-                        <span>{item?.title}</span>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </ScrollArea>
-            </TabsContent>
-            <TabsContent value="overview" className="flex-1 overflow-hidden">
-              <ScrollArea className="h-full">
-                <div className="p-4">
-                  <h2 className="text-xl font-bold mb-4">About this course</h2>
-                  <p className="text-gray-400">
-                    {studentCurrentCourseProgress?.courseDetails?.description}
+          {showChatSidebar ? (
+            <div className="h-full flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b border-gray-700">
+                <div>
+                  <h3 className="text-white font-bold">Chat with Instructor</h3>
+                  <p className="text-sm text-gray-400">
+                    {studentCurrentCourseProgress?.courseDetails?.title}
                   </p>
                 </div>
-              </ScrollArea>
-            </TabsContent>
-          </Tabs>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowChatSidebar(false)}
+                    className="text-gray-300"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+              <div className="flex-1 overflow-hidden">
+                <Chat
+                  courseIdProp={chatTarget.courseId}
+                  otherUserIdProp={chatTarget.instructorId}
+                  embedded={true}
+                />
+              </div>
+            </div>
+          ) : (
+            <Tabs defaultValue="content" className="h-full flex flex-col">
+              <TabsList className="grid bg-[#1c1d1f] w-full grid-cols-2 p-0 h-14">
+                <TabsTrigger
+                  value="content"
+                  className=" text-black rounded-none h-full"
+                >
+                  Course Content
+                </TabsTrigger>
+                <TabsTrigger
+                  value="overview"
+                  className=" text-black rounded-none h-full"
+                >
+                  Overview
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="content">
+                <ScrollArea className="h-full">
+                  <div className="p-4 space-y-4">
+                    {studentCurrentCourseProgress?.courseDetails?.curriculum.map(
+                      (item) => (
+                        <div
+                          className="flex items-center space-x-2 text-sm text-white font-bold cursor-pointer"
+                          key={item._id}
+                        >
+                          {studentCurrentCourseProgress?.progress?.find(
+                            (progressItem) =>
+                              progressItem.lectureId === item._id,
+                          )?.viewed ? (
+                            <Check className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <Play className="h-4 w-4 " />
+                          )}
+                          <span>{item?.title}</span>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+              <TabsContent value="overview" className="flex-1 overflow-hidden">
+                <ScrollArea className="h-full">
+                  <div className="p-4">
+                    <h2 className="text-xl font-bold mb-4">
+                      About this course
+                    </h2>
+                    <p className="text-gray-400">
+                      {studentCurrentCourseProgress?.courseDetails?.description}
+                    </p>
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+            </Tabs>
+          )}
         </div>
       </div>
       <Dialog open={lockCourse}>

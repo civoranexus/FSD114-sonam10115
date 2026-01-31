@@ -1,10 +1,24 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { generateCertificateService, downloadCertificateService } from "@/services";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  generateCertificateService,
+  downloadCertificateService,
+} from "@/services";
 import { Download, Award, Loader2, CheckCircle } from "lucide-react";
 
-const CertificateModal = ({ courseId, courseName, studentName, isOpen, onClose }) => {
+const CertificateModal = ({
+  courseId,
+  courseName,
+  studentName,
+  isOpen,
+  onClose,
+}) => {
   const [loading, setLoading] = useState(false);
   const [certificateData, setCertificateData] = useState(null);
   const [error, setError] = useState(null);
@@ -34,7 +48,9 @@ const CertificateModal = ({ courseId, courseName, studentName, isOpen, onClose }
       if (!certificateData?.certificateName) return;
 
       setLoading(true);
-      const blob = await downloadCertificateService(certificateData.certificateName);
+      const blob = await downloadCertificateService(
+        certificateData.certificateName,
+      );
 
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -77,11 +93,14 @@ const CertificateModal = ({ courseId, courseName, studentName, isOpen, onClose }
                   🎓 Ready to earn your certificate?
                 </h3>
                 <p className="text-blue-800 text-sm mb-4">
-                  Click the button below to generate your certificate of completion for:
+                  Click the button below to generate your certificate of
+                  completion for:
                 </p>
                 <div className="bg-white rounded p-4 border-l-4 border-blue-500">
                   <p className="font-bold text-gray-800">{courseName}</p>
-                  <p className="text-sm text-gray-600">Completed by {studentName}</p>
+                  <p className="text-sm text-gray-600">
+                    Completed by {studentName}
+                  </p>
                 </div>
               </div>
 
@@ -120,7 +139,10 @@ const CertificateModal = ({ courseId, courseName, studentName, isOpen, onClose }
             // After generation
             <>
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-                <CheckCircle className="mx-auto mb-3 text-green-600" size={40} />
+                <CheckCircle
+                  className="mx-auto mb-3 text-green-600"
+                  size={40}
+                />
                 <h3 className="text-lg font-semibold text-green-900 mb-2">
                   Congratulations!
                 </h3>

@@ -28,9 +28,9 @@ const isTeacherOnline = (teacher) => {
 exports.sendMessage = async (req, res) => {
     try {
         const { receiverId, courseId, message } = req.body;
-        const student = req.user;
+        const sender = req.user;
 
-        if (!student) {
+        if (!sender) {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
@@ -48,58 +48,64 @@ exports.sendMessage = async (req, res) => {
             return res.status(400).json({ message: "Invalid IDs" });
         }
 
-        const teacher = await User.findById(receiverId);
+        // Determine sender role based on user role
+        const senderRole = sender.role === "teacher" ? "teacher" : "student";
+        console.log(`📨 Message from ${senderRole} (${sender._id}) to ${receiverId}`);
 
-        // Save student message (use schema field names `senderId`/`receiverId`)
-        const studentMessage = await ChatMessage.create({
-            senderId: student.id || student._id,
+        const receiver = await User.findById(receiverId);
+
+        // Save message with correct sender role
+        const newMessage = await ChatMessage.create({
+            senderId: sender.id || sender._id,
             receiverId: receiverId,
             courseId,
-            senderRole: "student",
+            senderRole: senderRole,
             message,
         });
 
-        // If teacher offline → AI reply
-        console.log("🤔 Checking if teacher is online for receiverId:", receiverId);
-        const teacherIsOnline = isTeacherOnline(teacher);
+        // If sender is student AND teacher is offline → AI reply
+        if (senderRole === "student") {
+            console.log("🤔 Checking if teacher is online for receiverId:", receiverId);
+            const teacherIsOnline = isTeacherOnline(receiver);
 
-        if (!teacherIsOnline) {
-            console.log("🤖 Teacher offline - Triggering AI reply...");
-            let aiReply = "I'll get back to you soon.";
+            if (!teacherIsOnline) {
+                console.log("🤖 Teacher offline - Triggering AI reply...");
+                let aiReply = "I'll get back to you soon.";
 
-            try {
-                console.log("📤 Calling getAIReply with message:", message.substring(0, 50) + "...");
-                aiReply = await getAIReply(message, courseId);
-                console.log("✅ AI Reply received:", aiReply.substring(0, 100) + "...");
-            } catch (aiError) {
-                console.error("❌ AI ERROR 🔥:", {
-                    message: aiError.message,
-                    code: aiError.code,
-                    status: aiError.status,
-                    fullError: aiError
+                try {
+                    console.log("📤 Calling getAIReply with message:", message.substring(0, 50) + "...");
+                    aiReply = await getAIReply(message, courseId);
+                    console.log("✅ AI Reply received:", aiReply.substring(0, 100) + "...");
+                } catch (aiError) {
+                    console.error("❌ AI ERROR 🔥:", {
+                        message: aiError.message,
+                        code: aiError.code,
+                        status: aiError.status,
+                        fullError: aiError
+                    });
+                }
+
+                // Create AI message — schema requires an ObjectId for `senderId`.
+                // Use a generated ObjectId for system messages so Mongoose casting passes.
+                const aiMessage = await ChatMessage.create({
+                    senderId: new mongoose.Types.ObjectId(),
+                    receiverId: sender.id || sender._id,
+                    courseId,
+                    senderRole: "ai",
+                    isAI: true,
+                    message: aiReply,
+                });
+
+                return res.json({
+                    replyType: "ai",
+                    message: aiMessage,
                 });
             }
-
-            // Create AI message — schema requires an ObjectId for `senderId`.
-            // Use a generated ObjectId for system messages so Mongoose casting passes.
-            const aiMessage = await ChatMessage.create({
-                senderId: new mongoose.Types.ObjectId(),
-                receiverId: student.id || student._id,
-                courseId,
-                senderRole: "ai",
-                isAI: true,
-                message: aiReply,
-            });
-
-            return res.json({
-                replyType: "ai",
-                message: aiMessage,
-            });
         }
 
         return res.json({
-            replyType: "teacher",
-            message: studentMessage,
+            replyType: senderRole === "student" ? "teacher" : "student",
+            message: newMessage,
         });
     } catch (error) {
         console.error("SEND MESSAGE ERROR 🔥:", error);
@@ -143,6 +149,125 @@ exports.fetchMessages = async (req, res) => {
         });
     } catch (error) {
         console.error("FETCH MESSAGE ERROR 🔥:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+/* -------------------- FETCH INSTRUCTOR CONVERSATIONS -------------------- */
+exports.fetchInstructorConversations = async (req, res) => {
+    try {
+        const instructorId = req.user?._id || req.user?.id;
+
+        if (!instructorId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        console.log("📬 Fetching conversations for instructor:", instructorId);
+
+        // Find all unique students who messaged this instructor
+        const conversations = await ChatMessage.aggregate([
+            {
+                $match: {
+                    $or: [
+                        { receiverId: new mongoose.Types.ObjectId(instructorId) },
+                        { senderId: new mongoose.Types.ObjectId(instructorId) }
+                    ]
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            },
+            {
+                $group: {
+                    _id: {
+                        courseId: "$courseId",
+                        studentId: {
+                            $cond: [
+                                { $eq: ["$senderId", new mongoose.Types.ObjectId(instructorId)] },
+                                "$receiverId",
+                                "$senderId"
+                            ]
+                        }
+                    },
+                    lastMessage: { $first: "$message" },
+                    lastMessageTime: { $first: "$createdAt" },
+                    messageCount: { $sum: 1 }
+                }
+            },
+            {
+                $sort: { lastMessageTime: -1 }
+            },
+            {
+                $limit: 50
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id.studentId",
+                    foreignField: "_id",
+                    as: "studentInfo"
+                }
+            },
+            {
+                $lookup: {
+                    from: "courses",
+                    localField: "_id.courseId",
+                    foreignField: "_id",
+                    as: "courseInfo"
+                }
+            },
+            {
+                $project: {
+                    studentId: "$_id.studentId",
+                    courseId: "$_id.courseId",
+                    studentName: {
+                        $ifNull: [
+                            { $arrayElemAt: ["$studentInfo.userName", 0] },
+                            "Unknown Student"
+                        ]
+                    },
+                    studentEmail: {
+                        $ifNull: [
+                            { $arrayElemAt: ["$studentInfo.userEmail", 0] },
+                            ""
+                        ]
+                    },
+                    courseName: {
+                        $ifNull: [
+                            { $arrayElemAt: ["$courseInfo.title", 0] },
+                            "Unknown Course"
+                        ]
+                    },
+                    lastMessage: 1,
+                    lastMessageTime: 1,
+                    messageCount: 1
+                }
+            }
+        ]);
+
+        // Map to ensure all fields are present
+        const enrichedConversations = conversations.map(conv => ({
+            studentId: conv.studentId,
+            courseId: conv.courseId,
+            studentName: conv.studentName || "Unknown Student",
+            studentEmail: conv.studentEmail || "",
+            courseName: conv.courseName || "Unknown Course",
+            lastMessage: conv.lastMessage,
+            lastMessageTime: conv.lastMessageTime,
+            messageCount: conv.messageCount
+        }));
+
+        console.log("✅ Enriched conversations:", enrichedConversations.length);
+
+        return res.status(200).json({
+            success: true,
+            data: enrichedConversations,
+        });
+    } catch (error) {
+        console.error("FETCH INSTRUCTOR CONVERSATIONS ERROR 🔥:", error);
         return res.status(500).json({
             success: false,
             message: error.message,
