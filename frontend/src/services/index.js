@@ -191,3 +191,63 @@ export async function resetCourseProgressService(userId, courseId) {
 
   return data;
 }
+
+// ==================== ADMIN SERVICES ====================
+
+export async function getAdminDashboardStats() {
+  const { data } = await axiosInstance.get(`/admin/dashboard/stats`);
+  return data;
+}
+
+export async function getAdminUsers(page = 1, limit = 10, role = "") {
+  const { data } = await axiosInstance.get(
+    `/admin/users?page=${page}&limit=${limit}&role=${role}`
+  );
+  return data;
+}
+
+export async function getAdminUserById(userId) {
+  const { data } = await axiosInstance.get(`/admin/users/${userId}`);
+  return data;
+}
+
+export async function deleteAdminUser(userId) {
+  const { data } = await axiosInstance.delete(`/admin/users/${userId}`);
+  return data;
+}
+
+export async function updateAdminUserRole(userId, role) {
+  const { data } = await axiosInstance.put(`/admin/users/${userId}/role`, {
+    role,
+  });
+  return data;
+}
+
+export async function getAdminCourses(page = 1, limit = 10) {
+  const { data } = await axiosInstance.get(
+    `/admin/courses?page=${page}&limit=${limit}`
+  );
+  return data;
+}
+
+export async function getAdminCourseById(courseId) {
+  const { data } = await axiosInstance.get(`/admin/courses/${courseId}`);
+  return data;
+}
+
+export async function deleteAdminCourse(courseId) {
+  const { data } = await axiosInstance.delete(`/admin/courses/${courseId}`);
+  return data;
+}
+
+export async function getAdminOrders(page = 1, limit = 10) {
+  const { data } = await axiosInstance.get(
+    `/admin/orders?page=${page}&limit=${limit}`
+  );
+  return data;
+}
+
+export async function getAdminAnalytics() {
+  const { data } = await axiosInstance.get(`/admin/analytics`);
+  return data;
+}

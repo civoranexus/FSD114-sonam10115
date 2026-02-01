@@ -28,12 +28,14 @@ const studentOrderRoutes = require('./routes/student-routes/order-routes.js');
 const studentCoursesRoutes = require('./routes/student-routes/student-courses-routes.js');
 const chatRoutes = require('./routes/chat-Routes/index.js');
 const certificateRoutes = require('./routes/certificate-routes/index.js');
+const adminRoutes = require('./routes/admin-routes/index.js');
 
 // Serve static files for certificates
 app.use('/certificates', express.static('certificates'));
 
 app.use('/chat', chatRoutes);
 app.use('/certificate', certificateRoutes);
+app.use('/admin', adminRoutes);
 
 app.use('/', authRoutes);
 app.use('/auth', authRoutes);

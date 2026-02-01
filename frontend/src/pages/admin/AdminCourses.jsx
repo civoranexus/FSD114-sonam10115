@@ -1,0 +1,147 @@
+import React, { useEffect, useState } from "react";
+import AdminLayout from "../../components/admin-view/layout";
+import { Trash2, Edit, Search, Plus } from "lucide-react";
+import { fetchAllCourses, deleteCourse } from "../../services/adminService";
+
+function AdminCourses() {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const result = await fetchAllCourses(1, 50);
+      if (result.success) {
+        setCourses(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this course?")) {
+      try {
+        await deleteCourse(id);
+        setCourses(courses.filter((course) => course._id !== id));
+      } catch (error) {
+        console.error("Error deleting course:", error);
+        setError(error.message);
+      }
+    }
+  };
+
+  const filteredCourses = courses.filter((course) =>
+    course.title.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+
+  return (
+    <AdminLayout>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Courses Management
+          </h1>
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+          >
+            <Plus size={20} />
+            Add New Course
+          </button>
+        </div>
+
+        {error && (
+          <div className="bg-red-100 text-red-800 p-4 rounded-lg">
+            Error: {error}
+          </div>
+        )}
+
+        {/* Search Bar */}
+        <div className="bg-white rounded-lg shadow p-4">
+          <div className="flex items-center gap-2">
+            <Search size={20} className="text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search courses..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 outline-none border-l pl-4"
+            />
+          </div>
+        </div>
+
+        {/* Courses Table */}
+        {loading ? (
+          <div className="text-center py-8">Loading courses...</div>
+        ) : (
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                    Title
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                    Instructor
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                    Price
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {filteredCourses.map((course) => (
+                  <tr key={course._id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                      {course.title}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {course.instructorID?.userName || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                      ${course.pricing}
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Active
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm flex gap-2">
+                      <button className="text-blue-600 hover:text-blue-800">
+                        <Edit size={18} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(course._id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </AdminLayout>
+  );
+}
+
+export default AdminCourses;

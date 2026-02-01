@@ -15,7 +15,11 @@ import PaypalPaymentReturnPage from "./pages/student/payment-return";
 import PaypalPaymentCancelPage from "./pages/student/payment-cancel";
 import StudentCoursesPage from "./pages/student/student-courses";
 import StudentViewCourseProgressPage from "./pages/student/course-progress";
-import AdminDashboard from "./pages/admin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminCourses from "./pages/admin/AdminCourses";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminLayout from "./components/admin-view/layout";
 import Chat from "./pages/student/home/chat";
 
@@ -68,11 +72,47 @@ function App() {
         path="/admin"
         element={
           <RouteGuard
-            element={
-              <AdminLayout>
-                <AdminDashboard />
-              </AdminLayout>
-            }
+            element={<AdminDashboard />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <RouteGuard
+            element={<AdminUsers />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
+        path="/admin/courses"
+        element={
+          <RouteGuard
+            element={<AdminCourses />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
+        path="/admin/orders"
+        element={
+          <RouteGuard
+            element={<AdminOrders />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+      <Route
+        path="/admin/analytics"
+        element={
+          <RouteGuard
+            element={<AdminAnalytics />}
             authenticated={auth?.authenticate}
             user={auth?.user}
           />
