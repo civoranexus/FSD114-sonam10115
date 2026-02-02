@@ -29,6 +29,7 @@ function FormControls({ formControls = [], formData, setFormData }) {
                 [getControlItem.name]: event.target.value,
               })
             }
+            className="border border-[#E0E7F1] focus:border-[#16808D] focus:ring-2 focus:ring-[#1B9AAA] focus:ring-opacity-20 rounded-md px-3 py-2 transition-all duration-300"
           />
         );
         break;
@@ -43,7 +44,7 @@ function FormControls({ formControls = [], formData, setFormData }) {
             }
             value={currentControlItemValue}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full border border-[#E0E7F1] focus:border-[#16808D] focus:ring-2 focus:ring-[#1B9AAA] focus:ring-opacity-20 rounded-md">
               <SelectValue placeholder={getControlItem.label} />
             </SelectTrigger>
             <SelectContent>
@@ -71,6 +72,7 @@ function FormControls({ formControls = [], formData, setFormData }) {
                 [getControlItem.name]: event.target.value,
               })
             }
+            className="border border-[#E0E7F1] focus:border-[#16808D] focus:ring-2 focus:ring-[#1B9AAA] focus:ring-opacity-20 rounded-md px-3 py-2 transition-all duration-300"
           />
         );
         break;
@@ -89,6 +91,7 @@ function FormControls({ formControls = [], formData, setFormData }) {
                 [getControlItem.name]: event.target.value,
               })
             }
+            className="border border-[#E0E7F1] focus:border-[#16808D] focus:ring-2 focus:ring-[#1B9AAA] focus:ring-opacity-20 rounded-md px-3 py-2 transition-all duration-300"
           />
         );
         break;
@@ -101,7 +104,12 @@ function FormControls({ formControls = [], formData, setFormData }) {
     <div className="flex flex-col gap-3">
       {formControls.map((controleItem) => (
         <div key={controleItem.name}>
-          <Label htmlFor={controleItem.name}>{controleItem.label}</Label>
+          <Label
+            htmlFor={controleItem.name}
+            className="text-[#142C52] font-medium mb-2"
+          >
+            {controleItem.label}
+          </Label>
           {renderComponentByType(controleItem)}
         </div>
       ))}

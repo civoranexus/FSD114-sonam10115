@@ -1,3 +1,4 @@
+// ...existing code...
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../components/admin-view/layout";
 import { Search, Eye } from "lucide-react";
@@ -30,7 +31,7 @@ function AdminOrders() {
   const filteredOrders = orders.filter(
     (order) =>
       order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.userName.toLowerCase().includes(searchTerm.toLowerCase()),
+      (order.userName || "").toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const getStatusColor = (status) => {
@@ -48,89 +49,87 @@ function AdminOrders() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-gray-900">Orders Management</h1>
+      <div className="space-y-6 bg-[#F4F7FA] p-6 rounded-lg">
+        <h1 className="text-3xl font-bold text-[#142C52]">Orders Management</h1>
 
         {error && (
-          <div className="bg-red-100 text-red-800 p-4 rounded-lg">
+          <div className="bg-red-50 text-red-700 p-4 rounded-lg">
             Error: {error}
           </div>
         )}
 
-        {/* Search Bar */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg shadow-sm p-4 border border-[#E0E7F1]">
           <div className="flex items-center gap-2">
-            <Search size={20} className="text-gray-400" />
+            <Search size={20} className="text-[#142C52]/60" />
             <input
               type="text"
               placeholder="Search orders..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 outline-none border-l pl-4"
+              className="flex-1 outline-none border-l pl-4 text-[#142C52]"
             />
           </div>
         </div>
 
-        {/* Orders Table */}
         {loading ? (
-          <div className="text-center py-8">Loading orders...</div>
+          <div className="text-center py-8 text-[#142C52]">
+            Loading orders...
+          </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-[#E0E7F1]">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-[#F4F7FA] border-b">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[#142C52]">
                     Order ID
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[#142C52]">
                     Customer
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[#142C52]">
                     Course
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[#142C52]">
                     Amount
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[#142C52]">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[#142C52]">
                     Date
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[#142C52]">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {filteredOrders.map((order) => (
-                  <tr key={order._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  <tr key={order._id} className="hover:bg-[#F4F7FA]">
+                    <td className="px-6 py-4 text-sm font-medium text-[#142C52]">
                       {order._id.slice(0, 8)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-[#142C52]/70">
                       {order.userName || "N/A"}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-[#142C52]/70">
                       {order.courseTitle || "N/A"}
                     </td>
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="px-6 py-4 text-sm font-medium text-[#142C52]">
                       ${order.coursePricing}
                     </td>
                     <td className="px-6 py-4 text-sm">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                          order.paymentStatus || "pending",
-                        )}`}
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(order.paymentStatus || "pending")}`}
                       >
                         {order.paymentStatus || "pending"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-[#142C52]/70">
                       {new Date(order.orderDate).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-sm">
-                      <button className="text-blue-600 hover:text-blue-800">
+                      <button className="text-[#16808D] hover:text-[#142C52]">
                         <Eye size={18} />
                       </button>
                     </td>
@@ -146,3 +145,4 @@ function AdminOrders() {
 }
 
 export default AdminOrders;
+// ...existing code...

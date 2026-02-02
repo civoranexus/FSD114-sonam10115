@@ -8,11 +8,13 @@ function CourseLanding() {
   const { courseLandingFormData, setCourseLandingFormData } =
     useContext(InstructorContext);
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Course Landing Page</CardTitle>
+    <Card className="border border-[#E0E7F1] shadow-md hover:shadow-lg transition-shadow duration-300">
+      <CardHeader className="bg-gradient-to-r from-[#F4F7FA] to-white border-b border-[#E0E7F1]">
+        <CardTitle className="text-[#142C52] font-bold">
+          Course Landing Page
+        </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <FormControls
           formControls={courseLandingPageFormControls}
           formData={courseLandingFormData}
