@@ -29,6 +29,8 @@ const studentCoursesRoutes = require('./routes/student-routes/student-courses-ro
 const chatRoutes = require('./routes/chat-Routes/index.js');
 const certificateRoutes = require('./routes/certificate-routes/index.js');
 const adminRoutes = require('./routes/admin-routes/index.js');
+const quizRoutes = require('./routes/quiz-routes/index.js');
+
 
 // Serve static files for certificates
 app.use('/certificates', express.static('certificates'));
@@ -48,6 +50,8 @@ app.use('/student', studentCourseRoutes);
 app.use('/student', studentProgressRoutes);
 app.use('/student', studentOrderRoutes);
 app.use('/student', studentCoursesRoutes);
+
+// app.use('/quiz', quizRoutes);
 
 app.listen(PORT, () => {
     connectDB();

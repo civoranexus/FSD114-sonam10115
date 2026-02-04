@@ -26,6 +26,7 @@ import {
   Play,
   MessageCircle,
   Download,
+  BookOpen,
 } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
@@ -178,24 +179,47 @@ function StudentViewCourseProgressPage() {
   console.log(currentLecture, "currentLecture");
 
   return (
-    <div className="flex flex-col h-screen bg-[#1c1d1f] text-white">
+    <div
+      className="flex flex-col h-screen"
+      style={{ backgroundColor: "#F4F7FA" }}
+    >
       {showConfetti && <Confetti />}
-      <div className="flex items-center justify-between p-4 bg-[#1c1d1f] border-b border-gray-700">
-        <div className="flex items-center space-x-4">
+      <div
+        className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 border-b-2 shadow-md"
+        style={{
+          backgroundColor: "#071426",
+          borderColor: "#1B9AAA",
+          boxShadow: "0 4px 12px rgba(27, 154, 170, 0.15)",
+        }}
+      >
+        <div className="flex items-center space-x-2 sm:space-x-4 flex-1 min-w-0">
           <Button
             onClick={() => navigate("/student-courses")}
-            className="text-black"
-            variant="ghost"
+            className="text-xs sm:text-sm font-bold transition-all duration-200 hover:shadow-lg hover:scale-105 flex-shrink-0"
+            style={{ backgroundColor: "#1B9AAA", color: "white" }}
             size="sm"
           >
-            <ChevronLeft className="h-4 w-4 mr-2" />
-            Back to My Courses Page
+            <ChevronLeft className="h-4 w-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Back</span>
           </Button>
-          <h1 className="text-lg font-bold hidden md:block">
-            {studentCurrentCourseProgress?.courseDetails?.title}
-          </h1>
+          <div className="hidden md:flex flex-col min-w-0">
+            <h1
+              className="text-sm font-bold truncate"
+              style={{ color: "#F4F7FA" }}
+            >
+              {studentCurrentCourseProgress?.courseDetails?.title}
+            </h1>
+            <p className="text-xs opacity-75" style={{ color: "#1B9AAA" }}>
+              Learning Progress
+            </p>
+          </div>
         </div>
-        <Button onClick={() => setIsSideBarOpen(!isSideBarOpen)}>
+        <Button
+          onClick={() => setIsSideBarOpen(!isSideBarOpen)}
+          style={{ backgroundColor: "#1B9AAA", color: "white" }}
+          className="font-bold transition-all duration-200 hover:shadow-lg hover:scale-105 ml-2"
+          size="sm"
+        >
           {isSideBarOpen ? (
             <ChevronRight className="h-5 w-5" />
           ) : (
@@ -206,7 +230,7 @@ function StudentViewCourseProgressPage() {
       <div className="flex flex-1 overflow-hidden">
         <div
           className={`flex-1 ${
-            isSideBarOpen ? "mr-[400px]" : ""
+            isSideBarOpen ? "mr-[350px] sm:mr-[400px]" : ""
           } transition-all duration-300`}
         >
           <VideoPlayer
@@ -216,40 +240,80 @@ function StudentViewCourseProgressPage() {
             onProgressUpdate={setCurrentLecture}
             progressData={currentLecture}
           />
-          <div className="p-6 bg-[#1c1d1f] flex items-center justify-between">
-            <h2 className="text-2xl font-bold">{currentLecture?.title}</h2>
+          <div
+            className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6 border-t-2 shadow-sm"
+            style={{ backgroundColor: "#F4F7FA", borderColor: "#1B9AAA" }}
+          >
+            <div className="flex-1">
+              <h2
+                className="text-lg sm:text-2xl font-bold mb-1"
+                style={{ color: "#071426" }}
+              >
+                {currentLecture?.title}
+              </h2>
+              <p className="text-xs sm:text-sm" style={{ color: "#142C52" }}>
+                Now Playing
+              </p>
+            </div>
 
             {/* BUTTONS SECTION */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <Button
                 onClick={handleOpenChat}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="text-xs sm:text-sm font-bold transition-all duration-200 hover:shadow-lg hover:scale-105 w-full sm:w-auto"
+                style={{ backgroundColor: "#1B9AAA", color: "white" }}
+                size="sm"
               >
-                <MessageCircle className="mr-2 h-4 w-4" />
-                Message Instructor
+                <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Message</span>
+                <span className="sm:hidden">Chat</span>
+              </Button>
+              <Button
+                onClick={() => navigate("/quiz")}
+                className="text-xs sm:text-sm font-bold transition-all duration-200 hover:shadow-lg hover:scale-105 w-full sm:w-auto"
+                style={{ backgroundColor: "#1B9AAA", color: "white" }}
+                size="sm"
+              >
+                <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Quiz</span>
+                <span className="sm:hidden">📝</span>
               </Button>
               <Button
                 onClick={handleDownloadLecture}
-                variant="outline"
-                className="bg-green-500 hover:text-black"
+                className="text-xs sm:text-sm font-bold transition-all duration-200 hover:shadow-lg hover:scale-105 w-full sm:w-auto"
+                style={{ backgroundColor: "#142C52", color: "white" }}
+                size="sm"
               >
-                <Download className="mr-2 h-4 w-4" />
-                Download Lecture
+                <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Download</span>
+                <span className="sm:hidden">Save</span>
               </Button>
             </div>
           </div>
         </div>
         <div
-          className={`fixed top-[64px] right-0 bottom-0 w-[400px] bg-[#1c1d1f] border-l border-gray-700 transition-all duration-300 ${
+          className={`fixed top-14 sm:top-16 right-0 bottom-0 w-[320px] sm:w-[400px] transition-all duration-300 border-l-2 shadow-2xl ${
             isSideBarOpen ? "translate-x-0" : "translate-x-full"
           }`}
+          style={{ backgroundColor: "#F4F7FA", borderColor: "#1B9AAA" }}
         >
           {showChatSidebar ? (
             <div className="h-full flex flex-col">
-              <div className="flex items-center justify-between p-4 border-b border-gray-700">
+              <div
+                className="flex items-center justify-between p-3 sm:p-4 border-b-2 shadow-md"
+                style={{ backgroundColor: "#071426", borderColor: "#1B9AAA" }}
+              >
                 <div>
-                  <h3 className="text-white font-bold">Chat with Instructor</h3>
-                  <p className="text-sm text-gray-400">
+                  <h3
+                    className="text-sm sm:text-base font-bold"
+                    style={{ color: "#1B9AAA" }}
+                  >
+                    💬 Instructor Chat
+                  </h3>
+                  <p
+                    className="text-xs leading-tight mt-1"
+                    style={{ color: "#F4F7FA", opacity: 0.75 }}
+                  >
                     {studentCurrentCourseProgress?.courseDetails?.title}
                   </p>
                 </div>
@@ -257,9 +321,11 @@ function StudentViewCourseProgressPage() {
                   <Button
                     variant="ghost"
                     onClick={() => setShowChatSidebar(false)}
-                    className="text-gray-300"
+                    className="text-xs font-bold hover:scale-110 transition-all"
+                    style={{ color: "#1B9AAA" }}
+                    size="sm"
                   >
-                    Close
+                    ✕
                   </Button>
                 </div>
               </div>
@@ -273,38 +339,89 @@ function StudentViewCourseProgressPage() {
             </div>
           ) : (
             <Tabs defaultValue="content" className="h-full flex flex-col">
-              <TabsList className="grid bg-[#1c1d1f] w-full grid-cols-2 p-0 h-14">
+              <TabsList
+                className="grid w-full grid-cols-2 p-0 h-12 sm:h-14 rounded-none shadow-sm"
+                style={{ backgroundColor: "#071426" }}
+              >
                 <TabsTrigger
                   value="content"
-                  className=" text-black rounded-none h-full"
+                  className="text-xs sm:text-sm font-bold rounded-none transition-all duration-200"
+                  style={{ color: "#1B9AAA" }}
                 >
-                  Course Content
+                  📚 Lessons
                 </TabsTrigger>
                 <TabsTrigger
                   value="overview"
-                  className=" text-black rounded-none h-full"
+                  className="text-xs sm:text-sm font-bold rounded-none transition-all duration-200"
+                  style={{ color: "#1B9AAA" }}
                 >
-                  Overview
+                  ℹ️ About
                 </TabsTrigger>
               </TabsList>
-              <TabsContent value="content">
+              <TabsContent value="content" className="flex-1 overflow-hidden">
                 <ScrollArea className="h-full">
-                  <div className="p-4 space-y-4">
+                  <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
                     {studentCurrentCourseProgress?.courseDetails?.curriculum.map(
-                      (item) => (
+                      (item, index) => (
                         <div
-                          className="flex items-center space-x-2 text-sm text-white font-bold cursor-pointer"
+                          className="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm font-medium cursor-pointer p-3 rounded-lg transition-all duration-200 hover:shadow-md hover:scale-101 group"
                           key={item._id}
+                          style={{
+                            backgroundColor:
+                              studentCurrentCourseProgress?.progress?.find(
+                                (progressItem) =>
+                                  progressItem.lectureId === item._id,
+                              )?.viewed
+                                ? "#E8F5F5"
+                                : "#FFFFFF",
+                            borderLeft: `4px solid ${
+                              studentCurrentCourseProgress?.progress?.find(
+                                (progressItem) =>
+                                  progressItem.lectureId === item._id,
+                              )?.viewed
+                                ? "#1B9AAA"
+                                : "#142C52"
+                            }`,
+                            boxShadow:
+                              studentCurrentCourseProgress?.progress?.find(
+                                (progressItem) =>
+                                  progressItem.lectureId === item._id,
+                              )?.viewed
+                                ? "0 2px 8px rgba(27, 154, 170, 0.1)"
+                                : "none",
+                          }}
                         >
+                          <div
+                            className="flex items-center justify-center h-6 w-6 rounded-full flex-shrink-0 font-bold text-xs"
+                            style={{
+                              backgroundColor: "#142C52",
+                              color: "#F4F7FA",
+                            }}
+                          >
+                            {index + 1}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p
+                              className="truncate"
+                              style={{ color: "#071426" }}
+                            >
+                              {item?.title}
+                            </p>
+                          </div>
                           {studentCurrentCourseProgress?.progress?.find(
                             (progressItem) =>
                               progressItem.lectureId === item._id,
                           )?.viewed ? (
-                            <Check className="h-4 w-4 text-green-500" />
+                            <Check
+                              className="h-4 w-4 flex-shrink-0 font-bold"
+                              style={{ color: "#1B9AAA" }}
+                            />
                           ) : (
-                            <Play className="h-4 w-4 " />
+                            <Play
+                              className="h-4 w-4 flex-shrink-0 opacity-50"
+                              style={{ color: "#142C52" }}
+                            />
                           )}
-                          <span>{item?.title}</span>
                         </div>
                       ),
                     )}
@@ -313,13 +430,44 @@ function StudentViewCourseProgressPage() {
               </TabsContent>
               <TabsContent value="overview" className="flex-1 overflow-hidden">
                 <ScrollArea className="h-full">
-                  <div className="p-4">
-                    <h2 className="text-xl font-bold mb-4">
-                      About this course
-                    </h2>
-                    <p className="text-gray-400">
-                      {studentCurrentCourseProgress?.courseDetails?.description}
-                    </p>
+                  <div className="p-3 sm:p-4">
+                    <div
+                      className="mb-4 p-3 rounded-lg"
+                      style={{
+                        backgroundColor: "#E8F5F5",
+                        borderLeft: "4px solid #1B9AAA",
+                      }}
+                    >
+                      <h2
+                        className="text-base sm:text-lg font-bold mb-3"
+                        style={{ color: "#071426" }}
+                      >
+                        About Course
+                      </h2>
+                      <p
+                        className="text-xs sm:text-sm leading-relaxed"
+                        style={{ color: "#142C52" }}
+                      >
+                        {
+                          studentCurrentCourseProgress?.courseDetails
+                            ?.description
+                        }
+                      </p>
+                    </div>
+                    <div
+                      className="mt-4 p-3 rounded-lg"
+                      style={{
+                        backgroundColor: "#F0F8F8",
+                        borderLeft: "4px solid #142C52",
+                      }}
+                    >
+                      <p
+                        className="text-xs font-semibold"
+                        style={{ color: "#071426" }}
+                      >
+                        💡 Tip: Complete all lessons to earn your certificate!
+                      </p>
+                    </div>
                   </div>
                 </ScrollArea>
               </TabsContent>
@@ -328,29 +476,95 @@ function StudentViewCourseProgressPage() {
         </div>
       </div>
       <Dialog open={lockCourse}>
-        <DialogContent className="sm:w-[425px]">
+        <DialogContent
+          className="sm:w-[425px] rounded-xl"
+          style={{ backgroundColor: "#F4F7FA" }}
+        >
           <DialogHeader>
-            <DialogTitle>You can't view this page</DialogTitle>
-            <DialogDescription>
-              Please purchase this course to get access
+            <div className="flex items-center gap-2 mb-2">
+              <div
+                className="h-8 w-8 rounded-full flex items-center justify-center font-bold text-lg"
+                style={{ backgroundColor: "#1B9AAA", color: "white" }}
+              >
+                🔒
+              </div>
+              <DialogTitle style={{ color: "#071426" }}>
+                Course Locked
+              </DialogTitle>
+            </div>
+            <DialogDescription style={{ color: "#142C52" }} className="text-sm">
+              You need to purchase this course to unlock all lessons and
+              materials.
             </DialogDescription>
           </DialogHeader>
+          <div
+            className="mt-4 p-4 rounded-lg"
+            style={{
+              backgroundColor: "#E8F5F5",
+              borderLeft: "4px solid #1B9AAA",
+            }}
+          >
+            <p className="text-sm font-semibold" style={{ color: "#071426" }}>
+              Get full access to premium learning content today!
+            </p>
+          </div>
         </DialogContent>
       </Dialog>
       <Dialog open={showCourseCompleteDialog}>
-        <DialogContent showOverlay={false} className="sm:w-[425px]">
+        <DialogContent
+          showOverlay={false}
+          className="sm:w-[450px] rounded-xl"
+          style={{ backgroundColor: "#F4F7FA" }}
+        >
           <DialogHeader>
-            <DialogTitle>Congratulations!</DialogTitle>
-            <DialogDescription className="flex flex-col gap-3">
-              <Label>You have completed the course</Label>
-              <div className="flex flex-row gap-3">
-                <Button onClick={() => navigate("/student-courses")}>
-                  My Courses Page
-                </Button>
-                <Button onClick={handleRewatchCourse}>Rewatch Course</Button>
+            <div className="flex items-center gap-2 mb-2">
+              <div
+                className="h-10 w-10 rounded-full flex items-center justify-center text-2xl animate-bounce"
+                style={{ backgroundColor: "#1B9AAA", color: "white" }}
+              >
+                🎉
               </div>
-            </DialogDescription>
+              <DialogTitle style={{ color: "#1B9AAA" }} className="text-2xl">
+                Course Complete!
+              </DialogTitle>
+            </div>
           </DialogHeader>
+          <div className="mt-6 space-y-4">
+            <div
+              className="p-4 rounded-lg text-center"
+              style={{
+                backgroundColor: "#E8F5F5",
+                borderLeft: "4px solid #1B9AAA",
+              }}
+            >
+              <Label
+                style={{ color: "#071426" }}
+                className="text-base font-bold block mb-2"
+              >
+                🏆 Congratulations!
+              </Label>
+              <p style={{ color: "#142C52" }} className="text-sm">
+                You've successfully completed this course. Your certificate is
+                ready!
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              <Button
+                onClick={() => navigate("/student-courses")}
+                style={{ backgroundColor: "#1B9AAA", color: "white" }}
+                className="font-bold transition-all duration-200 hover:shadow-lg hover:scale-105"
+              >
+                My Courses
+              </Button>
+              <Button
+                onClick={handleRewatchCourse}
+                style={{ backgroundColor: "#142C52", color: "white" }}
+                className="font-bold transition-all duration-200 hover:shadow-lg hover:scale-105"
+              >
+                Rewatch
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

@@ -48,88 +48,182 @@ function StudentCoursesPage() {
   };
 
   return (
-    <div className="p-4 min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">My Courses</h1>
-        <p className="text-gray-600">
-          Continue learning or download your certificates
-        </p>
+    <div className="min-h-screen" style={{ backgroundColor: "#F4F7FA" }}>
+      {/* Hero Section */}
+      <div
+        className="px-4 sm:px-6 lg:px-8 py-8 sm:py-12 border-b-2 shadow-sm"
+        style={{ backgroundColor: "#071426", borderColor: "#1B9AAA" }}
+      >
+        <div className="container mx-auto px-0">
+          <div className="flex items-center gap-3 mb-3">
+            <div
+              className="h-10 w-10 rounded-full flex items-center justify-center text-xl"
+              style={{ backgroundColor: "#1B9AAA", color: "white" }}
+            >
+              📚
+            </div>
+            <h1
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold"
+              style={{ color: "#F4F7FA" }}
+            >
+              My Learning Journey
+            </h1>
+          </div>
+          <p className="text-sm sm:text-base mt-2" style={{ color: "#1B9AAA" }}>
+            {studentBoughtCoursesList?.length || 0}{" "}
+            {studentBoughtCoursesList?.length === 1 ? "course" : "courses"}{" "}
+            enrolled • Keep growing! 🚀
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {studentBoughtCoursesList && studentBoughtCoursesList.length > 0 ? (
-          studentBoughtCoursesList.map((course) => (
-            <Card
-              key={course.id}
-              className="flex flex-col shadow-md hover:shadow-lg transition-shadow"
-            >
-              <CardContent className="p-4 flex-grow">
-                <img
-                  src={course?.courseImage}
-                  alt={course?.title}
-                  className="h-52 w-full object-cover rounded-md mb-4"
-                />
-                <h3 className="font-bold mb-1 text-gray-800 line-clamp-2">
-                  {course?.title}
-                </h3>
-                <p className="text-sm text-gray-600 mb-2">
-                  {course?.instructorName}
-                </p>
-                <div className="text-xs text-gray-500">
-                  <p>
-                    📅{" "}
-                    {new Date(course?.dateOfPurchase).toLocaleDateString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      },
-                    )}
+      {/* Main Content */}
+      <div className="px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="container mx-auto px-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            {studentBoughtCoursesList && studentBoughtCoursesList.length > 0 ? (
+              studentBoughtCoursesList.map((course) => (
+                <Card
+                  key={course.id}
+                  className="flex flex-col overflow-hidden rounded-xl border-2 transition-all duration-300 hover:shadow-2xl hover:scale-105 group"
+                  style={{ borderColor: "#1B9AAA", backgroundColor: "white" }}
+                >
+                  <div className="relative h-40 sm:h-48 overflow-hidden">
+                    <img
+                      src={course?.courseImage}
+                      alt={course?.title}
+                      className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                    <div
+                      className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold"
+                      style={{ backgroundColor: "#1B9AAA", color: "white" }}
+                    >
+                      Active
+                    </div>
+                  </div>
+
+                  <CardContent className="p-4 sm:p-5 flex-grow">
+                    <h3
+                      className="font-bold text-base sm:text-lg mb-2 line-clamp-2 group-hover:text-transparent group-hover:bg-gradient-to-r from-[#1B9AAA] to-[#142C52] group-hover:bg-clip-text transition-all"
+                      style={{ color: "#071426" }}
+                    >
+                      {course?.title}
+                    </h3>
+                    <p
+                      className="text-xs sm:text-sm font-medium mb-3"
+                      style={{ color: "#1B9AAA" }}
+                    >
+                      👨‍🏫 {course?.instructorName}
+                    </p>
+                    <div className="space-y-2 text-xs sm:text-sm">
+                      <div
+                        className="flex items-center gap-2"
+                        style={{ color: "#142C52" }}
+                      >
+                        <span>📅</span>
+                        <span>
+                          {new Date(course?.dateOfPurchase).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )}
+                        </span>
+                      </div>
+                      <div
+                        className="flex items-center gap-2"
+                        style={{ color: "#142C52" }}
+                      >
+                        <span>⏱️</span>
+                        <span>In Progress</span>
+                      </div>
+                    </div>
+                  </CardContent>
+
+                  <CardFooter
+                    className="p-4 sm:p-5 flex flex-col gap-2 border-t-2"
+                    style={{ borderColor: "#1B9AAA" }}
+                  >
+                    <Button
+                      onClick={() =>
+                        navigate(`/course-progress/${course?.courseId}`)
+                      }
+                      className="w-full text-sm sm:text-base font-bold transition-all duration-200 hover:shadow-lg hover:scale-105"
+                      style={{ backgroundColor: "#1B9AAA", color: "white" }}
+                    >
+                      <Watch className="mr-2 h-4 w-4" />
+                      Continue Learning
+                    </Button>
+
+                    <Button
+                      onClick={() =>
+                        openCertificateModal(course?.courseId, course?.title)
+                      }
+                      className="w-full text-sm sm:text-base font-bold transition-all duration-200 hover:shadow-lg hover:scale-105"
+                      style={{ backgroundColor: "#142C52", color: "white" }}
+                    >
+                      <Award className="mr-2 h-4 w-4" />
+                      Certificate
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-full">
+                <Card
+                  className="p-8 sm:p-12 text-center rounded-xl border-2"
+                  style={{ borderColor: "#1B9AAA", backgroundColor: "white" }}
+                >
+                  <div className="flex justify-center mb-6">
+                    <div
+                      className="h-20 w-20 rounded-full flex items-center justify-center text-5xl"
+                      style={{ backgroundColor: "#E8F5F5" }}
+                    >
+                      📖
+                    </div>
+                  </div>
+                  <h2
+                    className="text-2xl sm:text-3xl font-bold mb-3"
+                    style={{ color: "#071426" }}
+                  >
+                    No Courses Yet
+                  </h2>
+                  <p
+                    className="text-sm sm:text-base mb-6"
+                    style={{ color: "#142C52" }}
+                  >
+                    Start your learning journey by exploring our amazing
+                    courses!
                   </p>
-                </div>
-              </CardContent>
-
-              <CardFooter className="p-4 flex flex-col gap-2">
-                <Button
-                  onClick={() =>
-                    navigate(`/course-progress/${course?.courseId}`)
-                  }
-                  className="w-full bg-blue-600 hover:bg-blue-700"
-                >
-                  <Watch className="mr-2 h-4 w-4" />
-                  Continue Course
-                </Button>
-
-                <Button
-                  onClick={() =>
-                    openCertificateModal(course?.courseId, course?.title)
-                  }
-                  variant="outline"
-                  className="w-full border-yellow-500 text-yellow-700 hover:bg-yellow-50"
-                >
-                  <Award className="mr-2 h-4 w-4" />
-                  Get Certificate
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        ) : (
-          <div className="col-span-full">
-            <Card className="p-8 text-center">
-              <Award size={48} className="mx-auto mb-4 text-gray-400" />
-              <h2 className="text-2xl font-bold text-gray-700 mb-2">
-                No Courses Yet
-              </h2>
-              <p className="text-gray-600 mb-4">
-                Start your learning journey by exploring our courses!
-              </p>
-              <Button onClick={() => navigate("/student/courses")}>
-                Browse Courses
-              </Button>
-            </Card>
+                  <div
+                    className="inline-block p-4 rounded-lg mb-6"
+                    style={{
+                      backgroundColor: "#E8F5F5",
+                      borderLeft: "4px solid #1B9AAA",
+                    }}
+                  >
+                    <p
+                      className="text-xs sm:text-sm font-semibold"
+                      style={{ color: "#071426" }}
+                    >
+                      💡 Browse hundreds of courses and expand your skills
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => navigate("/student/courses")}
+                    className="text-sm sm:text-base font-bold transition-all duration-200 hover:shadow-lg hover:scale-105"
+                    style={{ backgroundColor: "#1B9AAA", color: "white" }}
+                  >
+                    Explore Courses
+                  </Button>
+                </Card>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Certificate Modal */}

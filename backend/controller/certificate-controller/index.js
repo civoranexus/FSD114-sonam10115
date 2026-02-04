@@ -19,7 +19,7 @@ exports.generateCertificate = async (req, res) => {
             return res.status(400).json({ message: "Course ID is required" });
         }
 
-        console.log(`📜 Generating certificate for user: ${userId}, course: ${courseId}`);
+        console.log(` Generating certificate for user: ${userId}, course: ${courseId}`);
 
         // Find user
         const user = await User.findById(userId);
@@ -63,14 +63,14 @@ exports.generateCertificate = async (req, res) => {
                 downloadUrl: `/certificates/${filename}`,
             });
         } catch (certError) {
-            console.error("❌ Error generating PDF:", certError);
+            console.error(" Error generating PDF:", certError);
             return res.status(500).json({
                 message: "Failed to generate certificate",
                 error: certError.message,
             });
         }
     } catch (error) {
-        console.error("❌ Certificate generation error:", error);
+        console.error(" Certificate generation error:", error);
         res.status(500).json({
             message: "Internal server error",
             error: error.message,
@@ -100,15 +100,15 @@ exports.downloadCertificate = async (req, res) => {
             return res.status(404).json({ message: "Certificate file not found" });
         }
 
-        console.log("📥 Downloading certificate:", filename);
+        console.log(" Downloading certificate:", filename);
 
         res.download(filePath, filename, (err) => {
             if (err) {
-                console.error("❌ Download error:", err);
+                console.error("Download error:", err);
             }
         });
     } catch (error) {
-        console.error("❌ Download error:", error);
+        console.error("Download error:", error);
         res.status(500).json({
             message: "Error downloading certificate",
             error: error.message,

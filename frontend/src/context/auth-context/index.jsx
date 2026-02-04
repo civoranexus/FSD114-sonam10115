@@ -13,16 +13,21 @@ export default function AuthProvider({ children }) {
     user: null,
   });
   const [loading, setLoading] = useState(true);
+  const [onRegisterSuccess, setOnRegisterSuccess] = useState(null);
 
   async function handleRegisterUser(event) {
     event.preventDefault();
     try {
       const data = await registerService(signUpFormData);
       if (data.success) {
-        // Handle success, perhaps redirect or show message
         console.log("Registration successful");
+        // Reset form
+        setSignUpFormData(initialSignUpFormData);
+        // Call callback if provided (to switch to signin tab)
+        if (onRegisterSuccess) {
+          onRegisterSuccess();
+        }
       } else {
-        // Handle error
         console.error("Registration failed:", data.message);
       }
     } catch (error) {
@@ -34,21 +39,28 @@ export default function AuthProvider({ children }) {
   }
 
   async function handleLoginUser(event) {
-    event.preventDefault();
-    const data = await loginService(signInFormData);
-    console.log(data, "datadatadatadatadata");
+    try {
+      event.preventDefault();
+      const data = await loginService(signInFormData);
+      console.log(data, "datadatadatadatadata");
 
-    if (data.success) {
-      sessionStorage.setItem("accessToken", data.data.accessToken);
-      setAuth({
-        authenticate: true,
-        user: data.data.user,
-      });
-    } else {
-      setAuth({
-        authenticate: false,
-        user: null,
-      });
+      if (data.success) {
+        sessionStorage.setItem("accessToken", data.data.accessToken);
+        setAuth({
+          authenticate: true,
+          user: data.data.user,
+        });
+      } else {
+        setAuth({
+          authenticate: false,
+          user: null,
+        });
+      }
+    } catch (error) {
+      console.error(
+        "Login error:",
+        error.response?.data?.message || error.message,
+      );
     }
   }
 
@@ -87,6 +99,9 @@ export default function AuthProvider({ children }) {
       authenticate: false,
       user: null,
     });
+    sessionStorage.removeItem("accessToken");
+    setSignInFormData(initialSignInFormData);
+    setSignUpFormData(initialSignUpFormData);
   }
 
   useEffect(() => {
@@ -106,6 +121,7 @@ export default function AuthProvider({ children }) {
         handleLoginUser,
         auth,
         resetCredentials,
+        setOnRegisterSuccess,
       }}
     >
       {loading ? <Skeleton /> : children}

@@ -97,7 +97,7 @@ function StudentHomePage() {
         {/* content */}
         <div className="text-center bg-[#142C52]">
           {/* {title} */}
-          <div className="relative  max-w-full pt-8 pl-8">
+          <div className="relative  max-w-full pt-8 pl-8 pr-8 ">
             <motion.div
               variants={variants.fadeInUp}
               className="flex items-center bg-[#F4F7FA] rounded-lg p-3.5 justify-center gap-2.5 max-w-max mx-auto flex-wrap text-center "
@@ -148,15 +148,12 @@ function StudentHomePage() {
 
           <motion.div
             variants={variants.fadeIn}
-            className="mt-8 lg:mt-[100px] relative overflow-hidden pr-0"
+            className="mt-8 lg:mt-[100px] relative overflow-hidden "
           >
             <Marquee pauseOnHover={true}>
               {heroLogos.map((logo) => (
                 //logo
-                <div
-                  className="px-2 sm:px-4 md:px-14 py-5 bg-[#F4F7FA] max-w-screen-full"
-                  key={logo.id}
-                >
+                <div className=" px-14 py-5 bg-[#F4F7FA] " key={logo.id}>
                   <img src={logo.img} alt="logo" className="w-auto h-7" />
                 </div>
               ))}
@@ -175,6 +172,16 @@ function StudentHomePage() {
             alt="hero-banner"
             className="w-full h-full object-cover"
           />
+          {/* 
+          dark overlay
+          <div className="absolute insert-0 bg-black/20 z-10"></div>
+
+          {/* play button */}
+          {/* <div className="absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer">
+            <span className="flex bg-white w-16 h-16 items-center justify-center rounded-full play-btn ">
+              <RiPlayFill size={30} />
+            </span>
+          </div> */}
         </motion.figure>
       </motion.div>
 

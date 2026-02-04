@@ -6,12 +6,12 @@ const { getAIReply } = require("../../service/aiService");
 /* -------------------- HELPER -------------------- */
 const isTeacherOnline = (teacher) => {
     if (!teacher) {
-        console.log("❌ Teacher not found");
+        console.log("Teacher not found");
         return false;
     }
 
     if (!teacher.lastActive) {
-        console.log("⏱️  Teacher has no lastActive timestamp - will trigger AI");
+        console.log("Teacher has no lastActive timestamp - will trigger AI");
         return false;
     }
 
@@ -19,7 +19,7 @@ const isTeacherOnline = (teacher) => {
     const diffInMinutes = (now - teacher.lastActive) / 60000;
     const isOnline = diffInMinutes < 5;
 
-    console.log(`📊 Teacher online check: ${diffInMinutes.toFixed(2)} minutes since last active. Online: ${isOnline}`);
+    console.log(`Teacher online check: ${diffInMinutes.toFixed(2)} minutes since last active. Online: ${isOnline}`);
 
     return isOnline;
 };
@@ -50,7 +50,7 @@ exports.sendMessage = async (req, res) => {
 
         // Determine sender role based on user role
         const senderRole = sender.role === "teacher" ? "teacher" : "student";
-        console.log(`📨 Message from ${senderRole} (${sender._id}) to ${receiverId}`);
+        console.log(`Message from ${senderRole} (${sender._id}) to ${receiverId}`);
 
         const receiver = await User.findById(receiverId);
 
@@ -65,19 +65,19 @@ exports.sendMessage = async (req, res) => {
 
         // If sender is student AND teacher is offline → AI reply
         if (senderRole === "student") {
-            console.log("🤔 Checking if teacher is online for receiverId:", receiverId);
+            console.log("Checking if teacher is online for receiverId:", receiverId);
             const teacherIsOnline = isTeacherOnline(receiver);
 
             if (!teacherIsOnline) {
-                console.log("🤖 Teacher offline - Triggering AI reply...");
+                console.log("Teacher offline - Triggering AI reply...");
                 let aiReply = "I'll get back to you soon.";
 
                 try {
-                    console.log("📤 Calling getAIReply with message:", message.substring(0, 50) + "...");
+                    console.log("Calling getAIReply with message:", message.substring(0, 50) + "...");
                     aiReply = await getAIReply(message, courseId);
-                    console.log("✅ AI Reply received:", aiReply.substring(0, 100) + "...");
+                    console.log("AI Reply received:", aiReply.substring(0, 100) + "...");
                 } catch (aiError) {
-                    console.error("❌ AI ERROR 🔥:", {
+                    console.error("AI ERROR:", {
                         message: aiError.message,
                         code: aiError.code,
                         status: aiError.status,
@@ -108,7 +108,7 @@ exports.sendMessage = async (req, res) => {
             message: newMessage,
         });
     } catch (error) {
-        console.error("SEND MESSAGE ERROR 🔥:", error);
+        console.error("SEND MESSAGE ERROR:", error);
         return res.status(500).json({
             success: false,
             message: error.message,
@@ -148,7 +148,7 @@ exports.fetchMessages = async (req, res) => {
             data: messages,
         });
     } catch (error) {
-        console.error("FETCH MESSAGE ERROR 🔥:", error);
+        console.error("FETCH MESSAGE ERROR:", error);
         return res.status(500).json({
             success: false,
             message: error.message,
@@ -260,7 +260,7 @@ exports.fetchInstructorConversations = async (req, res) => {
             messageCount: conv.messageCount
         }));
 
-        console.log("✅ Enriched conversations:", enrichedConversations.length);
+        console.log("Enriched conversations:", enrichedConversations.length);
 
         return res.status(200).json({
             success: true,

@@ -126,115 +126,200 @@ function StudentViewCoursesPage() {
   console.log(loadingState, "loadingState");
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">All Courses</h1>
-      <div className="flex flex-col md:flex-row gap-4">
-        <aside className="w-full md:w-64 space-y-4">
-          <div>
-            {Object.keys(filterOptions).map((ketItem) => (
-              <div className="p-4 border-b">
-                <h3 className="font-bold mb-3">{ketItem.toUpperCase()}</h3>
-                <div className="grid gap-2 mt-2">
-                  {filterOptions[ketItem].map((option) => (
-                    <Label className="flex font-medium items-center gap-3">
-                      <Checkbox
-                        checked={
-                          filters &&
-                          Object.keys(filters).length > 0 &&
-                          filters[ketItem] &&
-                          filters[ketItem].indexOf(option.id) > -1
-                        }
-                        onCheckedChange={() =>
-                          handleFilterOnChange(ketItem, option)
-                        }
-                      />
-                      {option.label}
-                    </Label>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </aside>
-        <main className="flex-1">
-          <div className="flex justify-end items-center mb-4 gap-5">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2 p-5"
-                >
-                  <ArrowUpDownIcon className="h-4 w-4" />
-                  <span className="text-[16px] font-medium">Sort By</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[180px]">
-                <DropdownMenuRadioGroup
-                  value={sort}
-                  onValueChange={(value) => setSort(value)}
-                >
-                  {sortOptions.map((sortItem) => (
-                    <DropdownMenuRadioItem
-                      value={sortItem.id}
-                      key={sortItem.id}
+    <div className="min-h-screen" style={{ backgroundColor: "#F4F7FA" }}>
+      <div
+        style={{ backgroundColor: "#071426" }}
+        className="text-white py-8 sm:py-12 px-4 sm:px-6 mb-6 sm:mb-8"
+      >
+        <div className="container mx-auto px-4 sm:px-0">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">
+            Discover Our Courses
+          </h1>
+          <p className="text-base sm:text-lg opacity-90">
+            Expand your knowledge with our premium course collection
+          </p>
+        </div>
+      </div>
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+            <aside className="w-full md:w-64 lg:w-72 space-y-4">
+              <div className="rounded-lg p-4 sm:p-6 border bg-[#F4F7FA] border-[#1B9AAA]">
+                {Object.keys(filterOptions).map((ketItem) => (
+                  <div
+                    key={ketItem}
+                    className="mb-6 pb-6 border-b"
+                    style={{ borderColor: "#1B9AAA" }}
+                  >
+                    <h3
+                      className="font-bold mb-4 text-lg"
+                      style={{ color: "#142C52" }}
                     >
-                      {sortItem.label}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <span className="text-sm text-black font-bold">
-              {studentViewCoursesList.length} Results
-            </span>
-          </div>
-          <div className="space-y-4">
-            {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
-              studentViewCoursesList.map((courseItem) => (
-                <Card
-                  onClick={() => handleCourseNavigate(courseItem?._id)}
-                  className="cursor-pointer"
-                  key={courseItem?._id}
+                      {ketItem.toUpperCase()}
+                    </h3>
+                    <div className="grid gap-3 mt-3">
+                      {filterOptions[ketItem].map((option) => (
+                        <Label
+                          key={option.id}
+                          className="flex font-medium items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+                        >
+                          <Checkbox
+                            checked={
+                              filters &&
+                              Object.keys(filters).length > 0 &&
+                              filters[ketItem] &&
+                              filters[ketItem].indexOf(option.id) > -1
+                            }
+                            onCheckedChange={() =>
+                              handleFilterOnChange(ketItem, option)
+                            }
+                            className="border-2"
+                            style={{
+                              borderColor: "#1B9AAA",
+                              accentColor: "#1B9AAA",
+                            }}
+                          />
+                          <span style={{ color: "#142C52" }}>
+                            {option.label}
+                          </span>
+                        </Label>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </aside>
+            <main className="flex-1 w-full">
+              <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-5">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      size="sm"
+                      className="flex items-center gap-2 px-4 sm:px-6 py-2 rounded-lg font-semibold transition-all hover:shadow-lg w-full sm:w-auto"
+                      style={{ backgroundColor: "#1B9AAA", color: "white" }}
+                    >
+                      <ArrowUpDownIcon className="h-4 w-4" />
+                      <span className="text-[16px] font-medium">Sort By</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-[180px] border-2"
+                    style={{
+                      backgroundColor: "#F4F7FA",
+                      borderColor: "#1B9AAA",
+                    }}
+                  >
+                    <DropdownMenuRadioGroup
+                      value={sort}
+                      onValueChange={(value) => setSort(value)}
+                    >
+                      {sortOptions.map((sortItem) => (
+                        <DropdownMenuRadioItem
+                          value={sortItem.id}
+                          key={sortItem.id}
+                          style={{ color: "#142C52" }}
+                        >
+                          {sortItem.label}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <span
+                  className="text-xs sm:text-sm font-bold whitespace-nowrap"
+                  style={{ color: "#142C52" }}
                 >
-                  <CardContent className="flex gap-4 p-4">
-                    <div className="w-48 h-32 flex-shrink-0">
-                      <img
-                        src={courseItem?.image}
-                        className="w-ful h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-xl mb-2">
-                        {courseItem?.title}
-                      </CardTitle>
-                      <p className="text-sm text-gray-600 mb-1">
-                        Created By{" "}
-                        <span className="font-bold">
-                          {courseItem?.instructorName}
-                        </span>
-                      </p>
-                      <p className="text-[16px] text-gray-600 mt-3 mb-2">
-                        {`${courseItem?.curriculum?.length} ${
-                          courseItem?.curriculum?.length <= 1
-                            ? "Lecture"
-                            : "Lectures"
-                        } - ${courseItem?.level.toUpperCase()} Level`}
-                      </p>
-                      <p className="font-bold text-lg">
-                        ${courseItem?.pricing}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : loadingState ? (
-              <Skeleton />
-            ) : (
-              <h1 className="font-extrabold text-4xl">No Courses Found</h1>
-            )}
+                  {studentViewCoursesList.length} Results
+                </span>
+              </div>
+              <div className="space-y-4">
+                {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
+                  studentViewCoursesList.map((courseItem) => (
+                    <Card
+                      onClick={() => handleCourseNavigate(courseItem?._id)}
+                      className="cursor-pointer border-2 transition-all hover:shadow-xl hover:-translate-y-1"
+                      style={{
+                        borderColor: "#1B9AAA",
+                        backgroundColor: "white",
+                      }}
+                      key={courseItem?._id}
+                    >
+                      <CardContent className="flex flex-col sm:flex-row gap-3 sm:gap-6 p-4 sm:p-6">
+                        <div className="w-full sm:w-48 h-32 sm:h-32 flex-shrink-0 rounded-lg overflow-hidden">
+                          <img
+                            src={courseItem?.image}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <div className="flex-1 w-full">
+                          <CardTitle
+                            className="text-lg sm:text-2xl mb-2"
+                            style={{ color: "#071426" }}
+                          >
+                            {courseItem?.title}
+                          </CardTitle>
+                          <p
+                            className="text-xs sm:text-sm mb-2"
+                            style={{ color: "#142C52" }}
+                          >
+                            Instructor:{" "}
+                            <span
+                              className="font-bold"
+                              style={{ color: "#1B9AAA" }}
+                            >
+                              {courseItem?.instructorName}
+                            </span>
+                          </p>
+                          <p
+                            className="text-xs sm:text-[16px] mt-2 sm:mt-3 mb-2 sm:mb-3"
+                            style={{ color: "#142C52" }}
+                          >
+                            {`${courseItem?.curriculum?.length} ${
+                              courseItem?.curriculum?.length <= 1
+                                ? "Lecture"
+                                : "Lectures"
+                            } - ${courseItem?.level.toUpperCase()} Level`}
+                          </p>
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-3 sm:mt-4 gap-2">
+                            <p
+                              className="font-bold text-lg sm:text-2xl"
+                              style={{ color: "#1B9AAA" }}
+                            >
+                              ${courseItem?.pricing}
+                            </p>
+                            <div
+                              className="px-3 sm:px-4 py-2 rounded-lg w-full sm:w-auto text-center"
+                              style={{ backgroundColor: "#1B9AAA" }}
+                            >
+                              <p className="text-white text-xs sm:text-sm font-semibold">
+                                View Course
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                ) : loadingState ? (
+                  <Skeleton />
+                ) : (
+                  <div className="text-center py-16">
+                    <h1
+                      className="font-extrabold text-4xl"
+                      style={{ color: "#142C52" }}
+                    >
+                      No Courses Found
+                    </h1>
+                    <p className="mt-4" style={{ color: "#1B9AAA" }}>
+                      Try adjusting your filters
+                    </p>
+                  </div>
+                )}
+              </div>
+            </main>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );

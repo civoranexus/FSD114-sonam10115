@@ -52,11 +52,13 @@ function AdminAnalytics() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6 bg-[#F4F7FA] p-6 rounded-lg">
-        <h1 className="text-3xl font-bold text-[#142C52]">Analytics</h1>
+      <div className="space-y-6 bg-[#F4F7FA]">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#142C52]">
+          Analytics
+        </h1>
 
         {error && (
-          <div className="bg-red-50 text-red-700 p-4 rounded-lg">
+          <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm sm:text-base">
             Error: {error}
           </div>
         )}
@@ -67,7 +69,7 @@ function AdminAnalytics() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <StatItem
                 icon={TrendingUp}
                 label="Monthly Revenue"
@@ -156,11 +158,11 @@ function AdminAnalytics() {
                 {analytics.userGrowthByMonth?.slice(0, 5).map((item, idx) => (
                   <div key={idx}>
                     <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-[#142C52]">
+                      <span className="text-xs sm:text-sm font-medium text-[#142C52]">
                         {item._id?.year}-
                         {String(item._id?.month).padStart(2, "0")}
                       </span>
-                      <span className="text-sm font-medium text-[#142C52]">
+                      <span className="text-xs sm:text-sm font-medium text-[#142C52]">
                         {item.newUsers}
                       </span>
                     </div>

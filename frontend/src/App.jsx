@@ -15,6 +15,7 @@ import PaypalPaymentReturnPage from "./pages/student/payment-return";
 import PaypalPaymentCancelPage from "./pages/student/payment-cancel";
 import StudentCoursesPage from "./pages/student/student-courses";
 import StudentViewCourseProgressPage from "./pages/student/course-progress";
+import QuizPage from "./pages/student/QuizPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminCourses from "./pages/admin/AdminCourses";
@@ -145,6 +146,19 @@ function App() {
           element={<StudentViewCourseProgressPage />}
         />
       </Route>
+
+      {/* QUIZ ROUTE */}
+      <Route
+        path="/quiz"
+        element={
+          <RouteGuard
+            element={<QuizPage />}
+            authenticated={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+
       <Route path="*" element={<NotFoundPage />} />
 
       {/* STUDENT → TEACHER CHAT */}

@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
         const payload = jwt.verify(token, process.env.JWT_SECRET || 'JWT_SECRET');
         req.user = payload;
 
-        await User.findByIdAndUpdate(payload.id, {
+        await User.findByIdAndUpdate(payload._id, {
             lastActive: new Date()
         });
         next();

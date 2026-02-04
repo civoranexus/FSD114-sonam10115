@@ -9,7 +9,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signInFormControls, signUpFormControls } from "@/config";
 import { AuthContext } from "@/context/auth-context";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 function AuthPage() {
@@ -21,7 +21,15 @@ function AuthPage() {
     setSignUpFormData,
     handleRegisterUser,
     handleLoginUser,
+    setOnRegisterSuccess,
   } = useContext(AuthContext);
+
+  useEffect(() => {
+    // Set callback to switch to signin tab after successful registration
+    setOnRegisterSuccess(() => () => {
+      setActiveTab("signin");
+    });
+  }, [setOnRegisterSuccess]);
 
   function handleTabChange(value) {
     setActiveTab(value);

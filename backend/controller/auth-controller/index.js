@@ -17,10 +17,13 @@ const registerUser = async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
+    // default to 'student' if role not provided
+    const roleToAssign = role || "student";
+
     const newUser = new User({
         userName,
         userEmail,
-        role,
+        role: roleToAssign,
         password: hashPassword,
     });
 
@@ -51,7 +54,7 @@ const loginUser = async (req, res) => {
             userEmail: checkUser.userEmail,
             role: checkUser.role,
         },
-        "JWT_SECRET",
+        process.env.JWT_SECRET || "JWT_SECRET",
         { expiresIn: "120m" }
     );
 

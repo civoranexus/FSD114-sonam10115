@@ -76,6 +76,38 @@ function FormControls({ formControls = [], formData, setFormData }) {
           />
         );
         break;
+      case "radio":
+        element = (
+          <div className="flex gap-6">
+            {getControlItem.options && getControlItem.options.length > 0
+              ? getControlItem.options.map((option) => (
+                  <div key={option.id} className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      id={`${getControlItem.name}-${option.id}`}
+                      name={getControlItem.name}
+                      value={option.id}
+                      checked={currentControlItemValue === option.id}
+                      onChange={(event) =>
+                        setFormData({
+                          ...formData,
+                          [getControlItem.name]: event.target.value,
+                        })
+                      }
+                      className="w-4 h-4 accent-[#1B9AAA] cursor-pointer"
+                    />
+                    <Label
+                      htmlFor={`${getControlItem.name}-${option.id}`}
+                      className="text-[#142C52] font-medium cursor-pointer"
+                    >
+                      {option.label}
+                    </Label>
+                  </div>
+                ))
+              : null}
+          </div>
+        );
+        break;
 
       default:
         element = (

@@ -23,7 +23,7 @@ Keep response brief and focused on the student's question.
 Student Question:
 ${question}`;
 
-        console.log("🔑 Attempting OpenAI call with model: gpt-3.5-turbo");
+        console.log("Attempting OpenAI call with model: gpt-3.5-turbo");
 
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
@@ -44,18 +44,18 @@ ${question}`;
         console.log("✅ OpenAI response received successfully");
         return response.choices[0].message.content;
     } catch (error) {
-        console.error("❌ OpenAI Error:", error.message);
+        console.error(" OpenAI Error:", error.message);
         console.error("Error Code:", error.code || error.status);
 
         // QUOTA EXCEEDED - Use fallback response
         if (error.code === 'insufficient_quota' || error.status === 429) {
-            console.warn("⚠️  Quota exceeded - using fallback intelligent response");
+            console.warn(" Quota exceeded - using fallback intelligent response");
             return generateFallbackResponse(question);
         }
 
         // API KEY ERROR - Check configuration
         if (error.code === 'invalid_api_key' || error.status === 401) {
-            return "❌ AI service is not configured properly. Please check API key.";
+            return "AI service is not configured properly. Please check API key.";
         }
 
         // NETWORK ERROR
