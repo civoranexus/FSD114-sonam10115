@@ -1,10 +1,27 @@
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const connectDB = require('./utils/db.js');
+
+// Load environment variables FIRST
 dotenv.config();
+
+const connectDB = require('./utils/db.js');
+const initializeSocketHandlers = require('./socket/socketHandlers.js');
 const app = express();
+const server = http.createServer(app);
+
+// ============ SOCKET.IO SETUP ============
+const io = new Server(server, {
+    cors: {
+        origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+        credentials: true,
+        methods: ['GET', 'POST'],
+    },
+    transports: ['websocket', 'polling'],
+});
 
 // Middleware setup
 app.use(express.json());
@@ -12,13 +29,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     credentials: true,
 };
 app.use(cors(corsOptions));
-const PORT = 8000;
 
-// Import & mount route modules (CommonJS routers)
+const PORT = process.env.PORT || 8000;
+
+// ============ ROUTE IMPORTS ============
 const authRoutes = require('./routes/auth-routes/index.js');
 const instructorCourseRoutes = require('./routes/instructor-routes/course-route.js');
 const instructorMediaRoutes = require('./routes/instructor-routes/media-route.js');
@@ -31,7 +49,7 @@ const certificateRoutes = require('./routes/certificate-routes/index.js');
 const adminRoutes = require('./routes/admin-routes/index.js');
 const quizRoutes = require('./routes/quiz-routes/index.js');
 
-
+// ============ ROUTE MOUNTING ============
 // Serve static files for certificates
 app.use('/certificates', express.static('certificates'));
 
@@ -51,9 +69,19 @@ app.use('/student', studentProgressRoutes);
 app.use('/student', studentOrderRoutes);
 app.use('/student', studentCoursesRoutes);
 
-// app.use('/quiz', quizRoutes);
+// ============ SOCKET.IO EVENT HANDLERS ============
+initializeSocketHandlers(io);
 
-app.listen(PORT, () => {
+// ============ SERVER START ============
+server.listen(PORT, () => {
     connectDB();
-    console.log(`Server is running on port ${PORT}`);
-}); 
+    console.log(`
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║  🚀 Server is running on port ${PORT}                        ║
+║  🔌 WebSocket enabled for real-time chat                  ║
+║  📡 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}        ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+    `);
+});

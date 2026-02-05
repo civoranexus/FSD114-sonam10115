@@ -3,7 +3,14 @@ import { useChat } from "@/context/chat-context";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Clock, Loader2 } from "lucide-react";
+import {
+  Send,
+  Clock,
+  Loader2,
+  Check,
+  CheckCheck,
+  CircleDot,
+} from "lucide-react";
 
 const Chat = ({ courseIdProp, otherUserIdProp, embedded = false }) => {
   const params = useParams();
@@ -18,6 +25,8 @@ const Chat = ({ courseIdProp, otherUserIdProp, embedded = false }) => {
     sendMessage,
     fetchMessages,
     loading,
+    typing,
+    onlineUsers,
   } = useChat();
 
   console.log("Chat Params:", courseId, otherUserId);
@@ -31,7 +40,9 @@ const Chat = ({ courseIdProp, otherUserIdProp, embedded = false }) => {
   // Auto-scroll to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, typing]);
+
+  const isOtherUserOnline = onlineUsers.has(otherUserId);
 
   const rootClass = embedded
     ? "flex flex-col h-full"
@@ -43,13 +54,31 @@ const Chat = ({ courseIdProp, otherUserIdProp, embedded = false }) => {
       <div className="flex-1 flex flex-col shadow-xl border-0 overflow-hidden rounded-2xl bg-white">
         {/* Header */}
         <div
-          className="border-b-4 pb-4 px-6 pt-4"
+          className="border-b-4 pb-4 px-6 pt-4 flex items-center justify-between"
           style={{ backgroundColor: "#142C52", borderColor: "#16808D" }}
         >
-          <h3 className="text-white text-lg font-bold">Message Instructor</h3>
-          <p className="text-gray-300 text-sm mt-1">
-            Course: {courseId?.substring(0, 12)}...
-          </p>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-white text-lg font-bold">
+                Message Instructor
+              </h3>
+              <div className="flex items-center gap-1">
+                <CircleDot
+                  className={`h-3 w-3 ${
+                    isOtherUserOnline
+                      ? "text-green-400 fill-green-400"
+                      : "text-gray-400"
+                  }`}
+                />
+                <span className="text-gray-300 text-xs">
+                  {isOtherUserOnline ? "Online" : "Offline"}
+                </span>
+              </div>
+            </div>
+            <p className="text-gray-300 text-sm mt-1">
+              Course: {courseId?.substring(0, 12)}...
+            </p>
+          </div>
         </div>
 
         {/* Messages Container */}
@@ -73,6 +102,7 @@ const Chat = ({ courseIdProp, otherUserIdProp, embedded = false }) => {
               {messages.map((msg, index) => {
                 // Determine if this message is from the student (sender)
                 const isStudent = msg.senderRole === "student";
+                const isAI = msg.senderRole === "ai";
 
                 const currentDate = new Date(
                   msg.createdAt,
@@ -106,12 +136,19 @@ const Chat = ({ courseIdProp, otherUserIdProp, embedded = false }) => {
                           className={`px-4 py-2 rounded-2xl shadow-sm max-w-md ${
                             isStudent
                               ? "text-white rounded-tr-none"
-                              : "bg-white text-gray-800 rounded-tl-none border border-gray-200"
+                              : isAI
+                                ? "bg-blue-50 text-gray-800 rounded-tl-none border border-blue-200"
+                                : "bg-white text-gray-800 rounded-tl-none border border-gray-200"
                           }`}
                           style={
                             isStudent ? { backgroundColor: "#16808D" } : {}
                           }
                         >
+                          {isAI && (
+                            <p className="text-xs font-semibold text-blue-600 mb-1">
+                              🤖 AI Assistant
+                            </p>
+                          )}
                           <p className="text-sm leading-relaxed break-words">
                             {msg.message}
                           </p>
@@ -132,6 +169,29 @@ const Chat = ({ courseIdProp, otherUserIdProp, embedded = false }) => {
                   </div>
                 );
               })}
+
+              {/* Typing Indicator */}
+              {typing && (
+                <div className="flex justify-start">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-2xl rounded-tl-none border border-gray-200">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      />
+                      <div
+                        className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      />
+                    </div>
+                    <span className="text-xs text-gray-500 ml-1">
+                      Instructor is typing...
+                    </span>
+                  </div>
+                </div>
+              )}
+
               <div ref={messagesEndRef} />
             </div>
           )}

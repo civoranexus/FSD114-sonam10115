@@ -158,14 +158,12 @@ function StudentHomePage() {
                 </div>
               ))}
             </Marquee>
-            <div className="absolute top-0 left-0 bg-gradient-to-r from-white via-white/80 to-transparent w-6 sm:w-24 h-full z-10"></div>
-            <div className="absolute top-0 right-0 bg-gradient-to-l from-white via-white/80 to-transparent w-6 sm:w-24 h-full z-10"></div>
           </motion.div>
         </div>
         {/* Banner */}
         <motion.figure
           variants={variants.fadeIn}
-          className="relative mt-10 md:mt-14 lg:mt-[50px] max-w-full w-full h-[300px] md:h-[500px] mx-auto rounded-xl overflow-hidden"
+          className="relative  max-w-full w-full h-[300px] md:h-[500px] mx-auto rounded-xl overflow-hidden"
         >
           <img
             src="/hero-image.jpg"
@@ -184,12 +182,14 @@ function StudentHomePage() {
           </div> */}
         </motion.figure>
       </motion.div>
-
-      <StudentBenefitPage></StudentBenefitPage>
-
+      <div className=" mt-2 ">
+        <StudentBenefitPage></StudentBenefitPage>
+      </div>
       {/* </section> */}
 
-      <h2 className="text-2xl font-bold mb-6">Course Categories</h2>
+      <h2 className="text-2xl font-bold mb-6 mt-2 text-[#142C52]">
+        Course Categories
+      </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {courseCategories.map((categoryItem) => (
           <Button
@@ -202,7 +202,9 @@ function StudentHomePage() {
           </Button>
         ))}
       </div>
-      <h2 className="text-2xl font-bold mb-6">Featured Courses</h2>
+      <h2 className="text-2xl font-bold mt-2 text-[#142C52] mb-6">
+        Featured Courses
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
           studentViewCoursesList.map((courseItem) => (

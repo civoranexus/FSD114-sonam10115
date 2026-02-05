@@ -14,20 +14,11 @@ const Title = ({ title }) => {
       <div>
         <motion.h2
           variants={variants.fadeInUp}
-          className="text-3xl md:text-4xl font-bold"
+          className="text-3xl font-bold mb-6 text-[#142C52] items-center justify-center flex"
         >
           {title}
         </motion.h2>
-        {/* <motion.p
-          variants={variants.fadeInUp}
-          className="max-w-[630px] mt-4 mb-5 text-lg md:text-xl text-gray-600  "
-        >
-          {text}
-        </motion.p> */}
       </div>
-      {/* <motion.button variants={variants.fadeInUp} className="secondary-btn">
-        {link}
-      </motion.button>  */}
     </div>
   );
 };

@@ -18,13 +18,9 @@ const StudentBenefitPage = () => {
         viewport={{ once: true }}
         className="container"
       >
-        <Title
-          title="Benefits"
-          text="lorem ipsum dolor sit amet consectetur. Tempus tincidunt etiam eget elit id imperdiet et. Cras eu sit dignissim lorem nibh et. Ac cum eget habitasse in velit fringilla feugiat senectus in."
-          link="view All"
-        />
+        <Title title="Benefits" />
         {/* card wrapper  */}
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 lg:mt-16">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {benefitItems.map((item) => (
             // card
             <motion.div
