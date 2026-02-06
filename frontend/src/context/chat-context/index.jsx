@@ -86,8 +86,11 @@ export function ChatProvider({ children }) {
   // ============ INITIALIZE WEBSOCKET ============
   useEffect(() => {
     // Get token from sessionStorage
-    const token = sessionStorage.getItem("accessToken");
-    if (!token) return;
+    const t =
+      sessionStorage.getItem("accessToken") ||
+      localStorage.getItem("accessToken");
+    console.log("token present:", !!t);
+    if (t) console.log(JSON.parse(atob(t.split(".")[1])));
 
     // Extract user ID from token
     const uid = getUserIdFromToken(token);
@@ -127,20 +130,33 @@ export function ChatProvider({ children }) {
         });
       });
 
+      // Listen for message sent confirmation
+      ws.on("message:sent", (data) => {
+        console.log("✅ message:sent confirmation:", data);
+        // Replace pending optimistic message with confirmed id
+        setMessages((prev) =>
+          prev.map((m) =>
+            m._id && m._id.startsWith("temp_")
+              ? { ...m, _id: data._id, isPending: false }
+              : m,
+          ),
+        );
+      });
+
       // Listen for typing indicators
       ws.on("typing:indicator", (data) => {
-        console.log("⌨️  Typing indicator:", data);
+        console.log("Typing indicator:", data);
         setTyping(data.isTyping);
       });
 
       // Listen for online status
       ws.on("user:online", (data) => {
-        console.log("🟢 User online event:", data.userId);
+        console.log("User online event:", data.userId);
         setOnlineUsers((prev) => new Set([...prev, data.userId]));
       });
 
       ws.on("user:offline", (data) => {
-        console.log("🔴 User offline event:", data.userId);
+        console.log("User offline event:", data.userId);
         setOnlineUsers((prev) => {
           const updated = new Set(prev);
           updated.delete(data.userId);
@@ -150,7 +166,7 @@ export function ChatProvider({ children }) {
 
       // Listen for errors
       ws.on("error", (data) => {
-        console.error("❌ Socket error:", data);
+        console.error(" Socket error:", data);
       });
 
       return () => {
@@ -200,7 +216,7 @@ export function ChatProvider({ children }) {
       typeof id === "string" && /^[a-fA-F0-9]{24}$/.test(id);
 
     if (!isObjectId(courseId) || !isObjectId(otherUserId)) {
-      console.warn("⚠️ Invalid chat params, aborting fetchMessages:", {
+      console.warn("Invalid chat params, aborting fetchMessages:", {
         courseId,
         otherUserId,
       });
@@ -232,7 +248,7 @@ export function ChatProvider({ children }) {
         socketRef.current.emit("status:check", { userIds: [otherUserId] });
       }
     } catch (err) {
-      console.error("❌ Fetch messages error:", err);
+      console.error("Fetch messages error:", err);
       const cachedMessages = loadChatFromStorage(courseId, otherUserId);
       if (cachedMessages) {
         setMessages(cachedMessages);
@@ -270,13 +286,13 @@ export function ChatProvider({ children }) {
 
       // Emit via WebSocket only when socket is connected
       const sock = socketRef.current;
-      console.log("🔁 sendMessage - socket status:", {
+      console.log("sendMessage - socket status:", {
         socketId: sock?.id,
         connected: !!sock?.connected,
       });
 
       if (sock && sock.connected) {
-        console.log("➡️ emitting message:send via WebSocket", {
+        console.log("emitting message:send via WebSocket", {
           receiverId,
           courseId,
         });
@@ -293,9 +309,28 @@ export function ChatProvider({ children }) {
           receiverId,
           courseId,
         });
+
+        const optimisticMsg = {
+          _id: `temp_${Date.now()}`,
+          senderId: userId,
+          receiverId,
+          courseId,
+          senderRole: "student",
+          message,
+          createdAt: new Date(),
+          isPending: true,
+        };
+        console.log("Optimistic message added locally:", optimisticMsg._id);
+        setMessages((prev) => {
+          const updated = [...prev, optimisticMsg];
+          if (currentChatRef.current) {
+            saveChatToStorage(courseId, receiverId, updated);
+          }
+          return updated;
+        });
       } else {
         // Fallback to REST API if WebSocket is unavailable or disconnected
-        console.warn("⚠️  WebSocket not connected, using REST API");
+        console.warn("WebSocket not connected, using REST API");
         const res = await sendMessageApi({
           receiverId,
           courseId,
@@ -313,7 +348,7 @@ export function ChatProvider({ children }) {
 
       setFormData({ message: "" });
     } catch (err) {
-      console.error("❌ Send message error:", err);
+      console.error("Send message error:", err);
       const errorMsg = {
         _id: Date.now().toString(),
         message: `Error: ${err.response?.data?.message || err.message || "Failed to send message"}`,

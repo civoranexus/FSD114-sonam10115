@@ -76,12 +76,7 @@ initializeSocketHandlers(io);
 server.listen(PORT, () => {
     connectDB();
     console.log(`
-╔════════════════════════════════════════════════════════════╗
-║                                                            ║
-║  🚀 Server is running on port ${PORT}                        ║
-║  🔌 WebSocket enabled for real-time chat                  ║
-║  📡 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'}        ║
-║                                                            ║
-╚════════════════════════════════════════════════════════════╝
-    `);
+  Server is running on port ${PORT}                        
+  WebSocket enabled for real-time chat                  
+  Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:5173'} `);
 });

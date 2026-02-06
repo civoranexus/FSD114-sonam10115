@@ -14,7 +14,7 @@ const userTyping = new Map();
  */
 const initializeSocketHandlers = (io) => {
     io.on('connection', async (socket) => {
-        console.log(`✅ User connected: ${socket.id}`);
+        console.log(`User connected: ${socket.id}`);
 
         // ============ AUTHENTICATION & USER JOIN ============
         socket.on('user:join', async (data) => {
@@ -40,13 +40,13 @@ const initializeSocketHandlers = (io) => {
 
                 // Join a room with userId for direct messaging
                 socket.join(userId);
-                console.log(`👤 User ${userId} joined room`);
+                console.log(` User ${userId} joined room`);
 
                 // Notify others that user is online
                 io.emit('user:online', { userId, status: 'online' });
 
             } catch (error) {
-                console.error('❌ Join error:', error.message);
+                console.error(' Join error:', error.message);
                 socket.emit('error', { message: 'Authentication failed' });
             }
         });
@@ -57,7 +57,7 @@ const initializeSocketHandlers = (io) => {
                 const { senderId, receiverId, courseId, message } = data;
 
                 // Debug logging: show incoming payload and socket context
-                console.log('🔔 message:send received on server:', {
+                console.log('message:send received on server:', {
                     socketId: socket.id,
                     socketUserId: socket.userId,
                     payload: data,
@@ -98,12 +98,12 @@ const initializeSocketHandlers = (io) => {
                     message,
                 });
 
-                console.log(`💬 Message saved: ${senderRole} → ${receiverId}`);
+                console.log(` Message saved: ${senderRole} → ${receiverId}`);
 
                 // Debug: check whether receiver room exists and activeUsers map
                 const room = io.sockets.adapter.rooms.get(String(receiverId));
                 const roomMembers = room ? Array.from(room) : [];
-                console.log('🔍 Delivery debug:', {
+                console.log('Delivery debug:', {
                     receiverId,
                     activeUsersHasReceiver: activeUsers.has(String(receiverId)),
                     roomMembers,
@@ -133,14 +133,14 @@ const initializeSocketHandlers = (io) => {
                     const isTeacherOnline = activeUsers.has(receiverId);
 
                     if (!isTeacherOnline) {
-                        console.log('🤖 Teacher offline - Triggering AI reply...');
+                        console.log('Teacher offline - Triggering AI reply...');
                         let aiReply = "I'll get back to you soon.";
 
                         try {
                             aiReply = await getAIReply(message, courseId);
-                            console.log('✅ AI Reply received');
+                            console.log(' AI Reply received');
                         } catch (aiError) {
-                            console.error('❌ AI Error:', aiError.message);
+                            console.error('AI Error:', aiError.message);
                         }
 
                         // Create AI message in DB
@@ -168,7 +168,7 @@ const initializeSocketHandlers = (io) => {
                 }
 
             } catch (error) {
-                console.error('❌ Send message error:', error.message);
+                console.error('Send message error:', error.message);
                 socket.emit('error', { message: error.message });
             }
         });
@@ -185,9 +185,9 @@ const initializeSocketHandlers = (io) => {
                     isTyping: true,
                 });
 
-                console.log(`⌨️  ${userId} is typing in course ${courseId}`);
+                console.log(` ${userId} is typing in course ${courseId}`);
             } catch (error) {
-                console.error('❌ Typing start error:', error.message);
+                console.error('Typing start error:', error.message);
             }
         });
 
@@ -203,7 +203,7 @@ const initializeSocketHandlers = (io) => {
                 });
 
             } catch (error) {
-                console.error('❌ Typing stop error:', error.message);
+                console.error(' Typing stop error:', error.message);
             }
         });
 
@@ -219,7 +219,7 @@ const initializeSocketHandlers = (io) => {
 
                 socket.emit('status:response', onlineStatuses);
             } catch (error) {
-                console.error('❌ Status check error:', error.message);
+                console.error('Status check error:', error.message);
             }
         });
 
@@ -228,7 +228,7 @@ const initializeSocketHandlers = (io) => {
             try {
                 if (socket.userId) {
                     activeUsers.delete(socket.userId);
-                    console.log(`❌ User disconnected: ${socket.userId}`);
+                    console.log(`User disconnected: ${socket.userId}`);
 
                     // Notify others that user is offline
                     io.emit('user:offline', { userId: socket.userId, status: 'offline' });
@@ -239,13 +239,13 @@ const initializeSocketHandlers = (io) => {
                     });
                 }
             } catch (error) {
-                console.error('❌ Disconnect error:', error.message);
+                console.error('Disconnect error:', error.message);
             }
         });
 
         // ============ ERROR HANDLER ============
         socket.on('error', (error) => {
-            console.error('❌ Socket error:', error);
+            console.error('Socket error:', error);
         });
     });
 };
