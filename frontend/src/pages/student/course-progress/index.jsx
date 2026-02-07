@@ -31,7 +31,8 @@ import {
 import { useContext, useEffect, useState } from "react";
 import Confetti from "react-confetti";
 import { useNavigate, useParams } from "react-router-dom";
-import Chat from "@/pages/student/home/chat";
+// import ChatPage from "@/pages/chat/ChatPage";
+// import Chat from "@/pages/student/home/chat";
 
 function StudentViewCourseProgressPage() {
   const navigate = useNavigate();
@@ -51,29 +52,29 @@ function StudentViewCourseProgressPage() {
     instructorId: null,
   });
 
-  async function handleOpenChat() {
-    console.log(
-      "FULL COURSE DETAILS ===>",
-      studentCurrentCourseProgress?.courseDetails,
-    );
+  // async function handleOpenChat() {
+  //   console.log(
+  //     "FULL COURSE DETAILS ===>",
+  //     studentCurrentCourseProgress?.courseDetails,
+  //   );
 
-    const courseId = studentCurrentCourseProgress?.courseDetails?._id;
-    const instructorId =
-      studentCurrentCourseProgress?.courseDetails?.instructorId;
+  //   const courseId = studentCurrentCourseProgress?.courseDetails?._id;
+  //   const instructorId =
+  //     studentCurrentCourseProgress?.courseDetails?.instructorId;
 
-    console.log("CHAT CLICKED");
-    console.log("courseId:", courseId);
-    console.log("instructorId:", instructorId);
+  //   console.log("CHAT CLICKED");
+  //   console.log("courseId:", courseId);
+  //   console.log("instructorId:", instructorId);
 
-    if (!courseId || !instructorId) {
-      console.log("IDs missing, navigation stopped");
-      return;
-    }
+  //   if (!courseId || !instructorId) {
+  //     console.log("IDs missing, navigation stopped");
+  //     return;
+  //   }
 
-    // Open chat inside the right sidebar (embedded)
-    setChatTarget({ courseId, instructorId });
-    setShowChatSidebar(true);
-  }
+  //   // Open chat inside the right sidebar (embedded)
+  //   setChatTarget({ courseId, instructorId });
+  //   setShowChatSidebar(true);
+  // }
 
   async function handleDownloadLecture() {
     if (!currentLecture?.videoUrl) {
@@ -259,7 +260,7 @@ function StudentViewCourseProgressPage() {
             {/* BUTTONS SECTION */}
             <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
               <Button
-                onClick={handleOpenChat}
+                onClick={() => navigate("/chat")}
                 className="text-xs sm:text-sm font-bold transition-all duration-200 hover:shadow-lg hover:scale-105 w-full sm:w-auto"
                 style={{ backgroundColor: "#1B9AAA", color: "white" }}
                 size="sm"

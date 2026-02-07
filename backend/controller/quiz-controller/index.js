@@ -1,7 +1,7 @@
 // import openai from "../../utils/test-ai.js";
-import Quiz from "../../models/Quiz.js";
+const Quiz = require("../../models/Quiz.js");
 
-export const generateQuiz = async (req, res) => {
+const generateQuiz = async (req, res) => {
   const { courseTitle, courseDescription, studentId, courseId } = req.body;
 
   const prompt = `
@@ -34,3 +34,5 @@ export const generateQuiz = async (req, res) => {
 
   res.json(quiz);
 };
+
+module.exports = { generateQuiz };

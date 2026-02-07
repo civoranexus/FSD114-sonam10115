@@ -1,12 +1,13 @@
 import { useEffect } from "react";
-import { useChatStore } from "../store/useChatStore";
+import { useChatStore } from "@/services/chatStore";
 import UsersLoadingSkeleton from "./UsersLoadingSkeleton";
 import NoChatsFound from "./NoChatsFound";
-import { useAuthStore } from "../store/useAuthStore";
+import { useSocketStore } from "@/services/socketStore";
 
 function ChatsList() {
-  const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } = useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const { getMyChatPartners, chats, isUsersLoading, setSelectedUser } =
+    useChatStore();
+  const { onlineUsers } = useSocketStore();
 
   useEffect(() => {
     getMyChatPartners();
@@ -24,12 +25,19 @@ function ChatsList() {
           onClick={() => setSelectedUser(chat)}
         >
           <div className="flex items-center gap-3">
-            <div className={`avatar ${onlineUsers.includes(chat._id) ? "online" : "offline"}`}>
+            <div
+              className={`avatar ${onlineUsers.includes(chat._id) ? "online" : "offline"}`}
+            >
               <div className="size-12 rounded-full">
-                <img src={chat.profilePic || "/avatar.png"} alt={chat.fullName} />
+                <img
+                  src={chat.profilePic || "/avatar.png"}
+                  alt={chat.userName}
+                />
               </div>
             </div>
-            <h4 className="text-slate-200 font-medium truncate">{chat.fullName}</h4>
+            <h4 className="text-slate-200 font-medium truncate">
+              {chat.userName}
+            </h4>
           </div>
         </div>
       ))}

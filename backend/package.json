@@ -10,6 +10,8 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "@arcjet/inspect": "^1.1.0",
+    "@arcjet/node": "^1.1.0",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.8.0",
     "cookie-parser": "^1.4.7",
@@ -23,6 +25,7 @@
     "openai": "^6.16.0",
     "paypal-rest-sdk": "^1.8.1",
     "pdfkit": "^0.17.2",
+    "resend": "^6.9.1",
     "socket.io": "^4.8.3"
   }
 }

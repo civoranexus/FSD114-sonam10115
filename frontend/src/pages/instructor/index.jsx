@@ -1,6 +1,5 @@
 import InstructorCourses from "@/components/instructor-view/courses";
 import InstructorDashboard from "@/components/instructor-view/dashboard";
-import InstructorChat from "@/components/instructor-view/chat";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/auth-context";
@@ -37,12 +36,12 @@ function InstructorDashboardpage() {
       value: "courses",
       component: <InstructorCourses listOfCourses={instructorCoursesList} />,
     },
-    {
-      icon: MessageSquare,
-      label: "Messages",
-      value: "messages",
-      component: <InstructorChat instructorId={auth?.user?._id} />,
-    },
+    // {
+    //   icon: MessageSquare,
+    //   label: "Messages",
+    //   value: "messages",
+    //   component: <InstructorChat instructorId={auth?.user?._id} />,
+    // },
     {
       icon: LogOut,
       label: "Logout",
@@ -85,7 +84,7 @@ function InstructorDashboardpage() {
       <main className="flex-1 p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <Tabs value={activeTab} onValue Change={setActiveTab}>
             {menuItems.map((menuItem) => (
               <TabsContent value={menuItem.value}>
                 {menuItem.component !== null ? menuItem.component : null}

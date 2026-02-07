@@ -1,34 +1,18 @@
 import axiosInstance from "@/api/axiosInstance";
+import { useSocketStore } from "./socketStore";
+import { io } from "socket.io-client";
+import { toast } from "react-hot-toast";
 
-export async function sendMessageApi(data) {
-  const response = await axiosInstance.post("/chat/send", data);
-  return response.data;
-}
+const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:8000";
 
-export async function fetchMessagesApi(courseId, userId) {
-  const { data } = await axiosInstance.get(`/chat/${courseId}/${userId}`);
-  return data;
-}
 
-export async function fetchInstructorConversationsService() {
-  const { data } = await axiosInstance.get(`/chat/instructor/conversations`);
-  return data;
-}
-
-export async function generateCertificateService(courseId) {
-  const { data } = await axiosInstance.post(`/certificate/generate/${courseId}`);
-  return data;
-}
-
-export async function downloadCertificateService(filename) {
-  const response = await axiosInstance.get(`/certificate/download/${filename}`, {
-    responseType: "blob",
-  });
-  return response.data;
-}
 
 export async function registerService(formData) {
   const { data } = await axiosInstance.post("/auth/register", formData);
+
+  useSocketStore.setState({ authUser: data });
+
+  handleSocketConnection(data);
 
   return data;
 }
@@ -36,13 +20,41 @@ export async function registerService(formData) {
 export async function loginService(formData) {
   const { data } = await axiosInstance.post("/auth/login", formData);
 
+  useSocketStore.setState({ authUser: data });
+
+  handleSocketConnection(data);
+
+  toast.success("Logged in successfully");
   return data;
 }
 
 export async function checkAuthService() {
-  const { data } = await axiosInstance.get("/auth/check-auth");
+  try {
+    const { data } = await axiosInstance.get("/auth/check-auth");
 
-  return data;
+    useSocketStore.setState({ authUser: data });
+
+    handleSocketConnection(data);
+
+    return data;
+  } catch (error) {
+    handleSocketConnection(null);
+    return null;
+  }
+}
+
+export async function logoutService() {
+  try {
+    await axiosInstance.post("/auth/logout");
+
+    useSocketStore.setState({ authUser: null });
+
+    handleSocketConnection(null);
+
+    toast.success("Logged out successfully");
+  } catch (error) {
+    toast.error("Logout failed");
+  }
 }
 
 export async function mediaUploadService(formData, onProgressCallback) {
@@ -247,4 +259,53 @@ export async function getAdminOrders(page = 1, limit = 10) {
 export async function getAdminAnalytics() {
   const { data } = await axiosInstance.get(`/admin/analytics`);
   return data;
+}
+
+//certificate services
+export async function generateCertificateService(courseId) {
+  const { data } = await axiosInstance.post(`/certificate/generate/${courseId}`);
+  return data;
+}
+
+export async function downloadCertificateService(filename) {
+  const response = await axiosInstance.get(`/certificate/download/${filename}`, {
+    responseType: "blob",
+  });
+  return response.data;
+}
+
+
+function handleSocketConnection(authUser) {
+  const { socket } = useSocketStore.getState();
+
+  // Logout / Unauthorized
+  if (!authUser) {
+    if (socket?.connected) {
+      socket.disconnect();
+    }
+
+    useSocketStore.setState({
+      socket: null,
+      onlineUsers: [],
+    });
+
+    return;
+  }
+
+  //  Already connected
+  if (socket?.connected) return;
+
+  //  Fresh connection
+  const socketClient = io(BASE_URL, {
+    withCredentials: true,
+    autoConnect: false,
+  });
+
+  socketClient.connect();
+
+  socketClient.on("getOnlineUsers", (users) => {
+    useSocketStore.setState({ onlineUsers: users });
+  });
+
+  useSocketStore.setState({ socket: socketClient });
 }

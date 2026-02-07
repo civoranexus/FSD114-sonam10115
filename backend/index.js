@@ -1,27 +1,15 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const express = require('express');
 const dotenv = require('dotenv');
 
 // Load environment variables FIRST
 dotenv.config();
 
 const connectDB = require('./utils/db.js');
-const initializeSocketHandlers = require('./socket/socketHandlers.js');
-const app = express();
-const server = http.createServer(app);
-
-// ============ SOCKET.IO SETUP ============
-const io = new Server(server, {
-    cors: {
-        origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-        credentials: true,
-        methods: ['GET', 'POST'],
-    },
-    transports: ['websocket', 'polling'],
-});
+const { server, app, io } = require('./lib/socket.js');
+const { ENV } = require('./lib/env.js');
 
 // Middleware setup
 app.use(express.json());
@@ -44,10 +32,11 @@ const studentCourseRoutes = require('./routes/student-routes/course-routes.js');
 const studentProgressRoutes = require('./routes/student-routes/course-progress-routes.js');
 const studentOrderRoutes = require('./routes/student-routes/order-routes.js');
 const studentCoursesRoutes = require('./routes/student-routes/student-courses-routes.js');
-const chatRoutes = require('./routes/chat-Routes/index.js');
+const chatRoutes = require('./routes/message-Routes/index.js');
 const certificateRoutes = require('./routes/certificate-routes/index.js');
 const adminRoutes = require('./routes/admin-routes/index.js');
 const quizRoutes = require('./routes/quiz-routes/index.js');
+const messageRoutes = require('./routes/message-Routes/index.js');
 
 // ============ ROUTE MOUNTING ============
 // Serve static files for certificates
@@ -68,9 +57,18 @@ app.use('/student', studentCourseRoutes);
 app.use('/student', studentProgressRoutes);
 app.use('/student', studentOrderRoutes);
 app.use('/student', studentCoursesRoutes);
+app.use('/messages', messageRoutes);
+app.use('/quiz', quizRoutes);
 
-// ============ SOCKET.IO EVENT HANDLERS ============
-initializeSocketHandlers(io);
+// make ready for deployment
+if (ENV.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+    app.get("*", (_, res) => {
+        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    });
+}
+
 
 // ============ SERVER START ============
 server.listen(PORT, () => {

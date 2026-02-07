@@ -1,8 +1,8 @@
 // controllers/courseController.js
-import Enrollment from "../models/Enrollment.js";
-import Course from "../models/Course.js";
+const Enrollment = require("../models/Enrollment.js");
+const Course = require("../models/Course.js");
 
-export const completeLesson = async (req, res) => {
+const completeLesson = async (req, res) => {
     const { enrollmentId } = req.params;
 
     const enrollment = await Enrollment.findById(enrollmentId);
@@ -17,3 +17,5 @@ export const completeLesson = async (req, res) => {
     await enrollment.save();
     res.json(enrollment);
 };
+
+module.exports = { completeLesson };

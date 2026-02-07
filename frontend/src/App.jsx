@@ -22,7 +22,7 @@ import AdminCourses from "./pages/admin/AdminCourses";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminLayout from "./components/admin-view/layout";
-import Chat from "./pages/student/home/chat";
+import ChatPage from "./pages/chat/chatPage";
 
 function App() {
   const { auth } = useContext(AuthContext);
@@ -153,27 +153,27 @@ function App() {
 
       {/* STUDENT → TEACHER CHAT */}
       <Route
-        path="/student/chat/:courseId/:otherUserId"
+        path="/chat"
         element={
           <RouteGuard
             authenticated={auth?.authenticate}
             user={auth?.user}
-            element={<Chat />}
+            element={<ChatPage />}
           />
         }
       />
 
       {/* TEACHER → STUDENT CHAT */}
-      <Route
+      {/* <Route
         path="/instructor/chat/:courseId/:otherUserId"
         element={
           <RouteGuard
             authenticated={auth?.authenticate}
             user={auth?.user}
             element={<Chat />}
-          />
-        }
-      />
+          /> */}
+      {/* }
+      /> */}
     </Routes>
   );
 }
